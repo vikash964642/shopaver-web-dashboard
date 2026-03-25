@@ -1,0 +1,300 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ .container{
+    display: flex;
+    padding: 10px;
+ }
+.commerce-sidebar {
+  width: 218px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e6e6e6;
+  padding: 17px 0;
+ 
+  .sidebar-head {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px 25px;
+ 
+    .sidebar-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 49.5px;
+      width: 49.5px;
+      border-radius: 50%;
+      background: #5801b7;
+ 
+      img {
+        height: 27px;
+        width: 27px;
+      }
+    }
+ 
+    p {
+      color: #454545;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+}
+ 
+ 
+
+ 
+ 
+.sidebar-main-container {
+  margin-top: 10px;
+ 
+  .sidebar-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    font-size: 16px;
+    color: #555;
+    // cursor: pointer;
+    position: relative;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+ 
+    .arrow {
+      font-size: 22px;
+      color: inherit;
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+  }
+ 
+  .sidebar-item:hover {
+    background: #f5f0ff;
+  }
+ 
+  .sidebar-item.active {
+    color: #6a00ff;
+    font-weight: 600;
+    background: #faf7ff;
+ 
+    .arrow {
+      transform: rotate(90deg);
+    }
+  }
+ 
+  /* RIGHT ACTIVE INDICATOR */
+  .sidebar-item.active::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: #6a00ff;
+  }
+}
+.sidebar-item.disabled {
+  cursor: default; /* pointer hatake default cursor */
+   pointer-events: none;
+
+}
+
+.sidebar-item:not(.disabled) {
+  cursor: pointer; /* sirf FAQ section pe pointer */
+}
+.main-container {
+  width: 100%;
+  padding: 20px;
+}
+
+/* Section Wrapper */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Common Section Styling */
+.Title-section,
+.Hero-section,
+.all-in-one-section,
+.why-choose-us-section,
+.faq-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Form Group */
+form > div > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label */
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Inputs */
+input,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s ease;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &:focus {
+    border-color: #5801b7;
+    box-shadow: 0 0 0 3px rgba(88, 1, 183, 0.15);
+  }
+}
+input.invalid,
+textarea.invalid {
+  border: 1px solid red;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 0px;
+}
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Buttons */
+.save,
+.add-btn {
+  align-self: flex-start;
+  padding: 8px 16px;
+  background-color: #5801b7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+
+  &:hover {
+    background-color: #47019a;
+  }
+}
+
+/* FAQ Item */
+.faq-item {
+  position: relative;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Remove Button */
+.remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+
+  &:hover {
+    background: #dc2626;
+  }
+}
+
+.group-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+  }
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+  }
+
+  input[type="text"],
+  input[type="file"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.2s;
+
+    &:focus {
+      border-color: #4f46e5;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    }
+  }
+}
+
+
+.custom-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+.custom-file span {
+  font-size: 14px;
+}
+
+.custom-file button {
+  padding: 2px 6px;
+}

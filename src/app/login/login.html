@@ -1,0 +1,293 @@
+<style>
+  .main-container {
+    padding: 50px 70px 10px 70px;
+    overflow: hidden;
+  }
+  .main-container-box {
+    /* display: flex;
+        justify-content: center;
+        gap: 100px;
+        align-items: center; */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20vh;
+    height: 75vh;
+  }
+  .img-sec2 {
+    padding-top: 60px;
+    padding-bottom: 55px;
+  }
+  .login-heading1 {
+    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    margin-bottom: 0px;
+    font-weight: 400;
+    font-size: 18.26px;
+    color: #131118;
+    line-height: 21.13px;
+    text-align: center;
+  }
+  .login-heading2 {
+    margin-bottom: 0px;
+    font-weight: 700;
+    font-size: 30px;
+    color: #131118;
+    line-height: 45px;
+  }
+  .login-para1 {
+    color: #666666;
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 0px;
+    line-height: 24px;
+  }
+  .email-para {
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 21px;
+    margin-bottom: 0px;
+  }
+  .email-box {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+  }
+  .password-box {
+    display: flex;
+    flex-direction: column;
+    padding-top: 12px;
+    position: relative;
+  }
+  .pass-show-sec {
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    cursor: pointer;
+  }
+  .email-inp {
+    width: 445px;
+    height: 50px;
+    border-radius: 8px;
+    border: 1px solid #c8c8c8;
+    font-size: 16px;
+    font-weight: 400;
+    color: #373737;
+    padding-left: 16px;
+  }
+  input:focus {
+    outline: none;
+  }
+
+  .forgot-pass-para {
+    margin-bottom: 0px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #5801b7;
+    padding-top: 12px;
+    text-align: end;
+    cursor: pointer;
+  }
+  .login-btn-sec {
+    width: 445px;
+    height: 50px;
+    border-radius: 10.28px;
+    background-color: #5801b7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+  .login-btn-para {
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #ffffff;
+  }
+  .signup-sec {
+    display: flex;
+    gap: 5px;
+    padding-top: 15px;
+    justify-content: center;
+  }
+  .signup-sec-para1 {
+    margin-bottom: 0px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #666666;
+  }
+  .signup-sec-para2 {
+    margin-bottom: 0px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #5801b7;
+    cursor: pointer;
+  }
+  .login-pci-sec {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+  }
+  .img-sec1 {
+    /* border: 0.73px solid #ECECEC;
+        border-radius: 4.38px; */
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  .email-inp.ng-invalid.ng-touched {
+    border: 1.25px solid #ee4b2b;
+  }
+  .error-msg {
+    font-weight: 500;
+    font-size: 13px;
+    color: #ee4b2b;
+  }
+  @media (max-width: 350px) {
+    .main-container {
+      padding: 20px 20px 20px 20px;
+    }
+    .email-inp {
+      width: 100%;
+    }
+    .login-btn-sec {
+      width: 100%;
+    }
+    .login-heading2 {
+      font-weight: 600;
+      font-size: 25px;
+      color: #131118;
+    }
+  }
+  @media (min-width: 351px) and (max-width: 380px) {
+    .login-heading2 {
+      font-weight: 600;
+      font-size: 25px;
+      color: #131118;
+    }
+    .main-container {
+      padding: 20px 20px 20px 20px;
+    }
+    .email-inp {
+      width: 300px;
+    }
+    .login-btn-sec {
+      width: 300px;
+    }
+  }
+  @media (min-width: 381px) and (max-width: 450px) {
+    .login-heading2 {
+      font-weight: 600;
+      font-size: 25px;
+      color: #131118;
+    }
+    .email-inp {
+      width: 320px;
+    }
+    .login-btn-sec {
+      width: 320px;
+    }
+    .main-container {
+      padding: 20px 35px 20px 35px;
+    }
+  }
+
+  @media (min-width: 451px) and (max-width: 768px) {
+    .login-heading2 {
+      font-weight: 600;
+      font-size: 25px;
+      color: #131118;
+    }
+
+    .email-inp {
+      width: 350px;
+    }
+    .login-btn-sec {
+      width: 350px;
+    }
+  }
+  @media (max-width: 1200px) {
+    .login-img-banner {
+      height: 300px;
+      width: 400px;
+    }
+  }
+</style>
+
+
+<div class="main-container">
+  <div class="m-0 p-0">
+    <img src="assets/image/shopaverLogo-Login2.png" />
+  </div>
+
+  <div class="main-container-box">
+    <div class="img-sec1 m-0 p-0 d-none d-lg-flex justify-content-lg-center">
+      <div class="img-sec2">
+        <img src="assets/image/LogIn2Img.png" class="login-img-banner" />
+        <p class="login-heading1">Shopaver hai to business easy hai!</p>
+      </div>
+    </div>
+
+    <div class="m-0 p-0 pt-4 pt-lg-0 d-flex justify-content-center">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="d-flex">
+          <p class="login-heading2">Hey, Welcome Back</p>
+          <img src="assets/image/LogIn2-Hand.png" />
+        </div>
+        <div class="email-box form-group m-0">
+          <label for="UserId" class="email-para mb-2">Email/Mobile (Registered)*</label>
+          <input
+            type="text"
+            id="UserId"
+            autocomplete="off"
+            name="UserId"
+            class="email-inp"
+            id="UserId"
+            formControlName="UserId"
+          />
+        </div>
+
+        <div *ngIf="submitted && f['UserId'].errors" class="error-msg">
+          <div>Email/Mobile is required.</div>
+        </div>
+
+        <div class="password-box form-group m-0">
+          <label for="password" class="email-para mb-2">Password*</label>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="Password"
+            name="Password"
+            class="email-inp form-control"
+            autocomplete="off"
+            formControlName="Password"
+          />
+          <div class="pass-show-sec" (click)="togglePassword()">
+            <i *ngIf="!showPassword" class="fa-regular fa-eye"></i>
+            <i *ngIf="showPassword" class="fa-regular fa-eye-slash"></i>
+          </div>
+        </div>
+
+        <div class="error-msg" *ngIf="submitted && f['Password'].errors">
+          <div>Password is required.</div>
+        </div>
+        <p class="forgot-pass-para">Forgot Password?</p>
+
+        <button type="submit" class="login-btn-sec login-btn-para btn">Login</button>
+        <div class="signup-sec">
+          <p class="signup-sec-para1">Don’t have account?</p>
+          <!-- <p class="signup-sec-para2" (click)="signUpPage()">Signup</p> -->
+          <a routerLink="/Sign-up" class="signup-sec-para2">Signup</a>
+        </div>
+        <div class="login-pci-sec">
+          <img src="assets/image/login-pciLogo.png" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

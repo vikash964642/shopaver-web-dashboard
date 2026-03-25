@@ -1,0 +1,55 @@
+<div style="display: flex">
+  <div class="commerce-sidebar">
+    <div class="sidebar-head">
+      <div class="" style="width: 150px">
+        <img src="assets/image/shopaverLogo-Login2.png" width="150" alt="" />
+      </div>
+    </div>
+
+    <div class="sidebar-main-container">
+      <div class="sidebar-item">
+        <span>Landing page list</span>
+        <span class="arrow">›</span>
+      </div>
+
+      <div class="sidebar-item" (click)="goTo('landing-page-data')">
+        <span>Form Data</span>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="head">
+      <p>List of landing Page</p>
+      <button routerLink="/create-landing-page">Create New</button>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="page-card" *ngFor="let card of pageCards">
+        <div class="card-actions">
+          <!-- <i
+        class="fa fa-edit edit-icon"
+        title="Edit"
+        (click)="card.slug && openForEdit(card.slug)"
+      ></i> -->
+          <i
+            class="fa fa-trash delete-icon"
+            title="Delete"
+            style="height: 22px; width: 22px"
+            (click)="card.slug && deletePage(card.slug)"
+          ></i>
+        </div>
+
+        <h3 style="margin-top: 15px">{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+
+        <div class="preview">
+          <img [src]="card.preview_image" [alt]="card.title || 'Preview Image'" />
+          <a class="open-btn" (click)="card.slug && openForEdit(card.slug)"> Open Page </a>
+        </div>
+      </div>
+
+      <!-- <p *ngIf="pageCards.length === 0">No pages available</p> -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<div style="display: flex">
+  <div class="commerce-sidebar">
+    <div class="sidebar-head">
+      <div class="" style="width: 150px">
+        <img src="assets/image/shopaverLogo-Login2.png" width="150" alt="" />
+      </div>
+    </div>
+
+    <div class="sidebar-main-container">
+      <div class="sidebar-item" (click)="goTo('landing-page-list')">
+        <span>Landing page list</span>
+        <span class="arrow">›</span>
+      </div>
+
+      <div class="sidebar-item">
+        <span>Form Data</span>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+   <div class="head">
+  <p>Form Data</p>
+
+  <!-- RIGHT SIDE GROUP -->
+  <div class="head-actions">
+    <input
+      type="text"
+      placeholder="Search..."
+      [(ngModel)]="searchText"
+      (input)="onSearchChange()"
+    />
+
+    <button (click)="exportToExcel()">Export</button>
+  </div>
+</div>
+
+   
+
+    <!-- 📊 TABLE -->
+    <div *ngIf="isLoading" class="loader-overlay">
+      <div class="loader"></div>
+    </div>
+    <div class="content-wrapper">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Company</th>
+            <th>Email</th>
+            <th>Slug</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of formData; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.contact }}</td>
+            <td>{{ item.company }}</td>
+            <td>{{ item.businessEmail }}</td>
+            <td>{{ item.slug }}</td>
+            <td>{{ item.message }}</td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="formData.length === 0">
+            <td colspan="7" class="no-data">No Data Found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 📄 PAGINATION -->
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="page === 1">Prev</button>
+
+      <span>Page {{ page }}</span>
+
+      <button (click)="nextPage()" [disabled]="formData.length < pageSize">Next</button>
+    </div>
+  </div>
+</div>
