@@ -42,7 +42,7 @@ export class CreateLandingPage implements OnInit {
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
     private router: Router,
-  ) {}
+  ) { }
 
   // ===============================
   // FORM DATA
@@ -146,6 +146,7 @@ export class CreateLandingPage implements OnInit {
   // ===============================
 
   loadPageBySlug(slug: string): void {
+    
     this.landingService.getLandingPageBySlug(slug).subscribe({
       next: (res: any) => {
         console.log('Landing page data:', res);
@@ -163,7 +164,9 @@ export class CreateLandingPage implements OnInit {
 
         // ================= HERO SECTION =================
         const bannerImage = data?.bannerSection?.image || '';
-
+        if (bannerImage) {
+          this.isUploaded = true;
+        }
         this.heroData = {
           ...this.heroData,
           heading: data?.bannerSection?.heading || '',
@@ -173,10 +176,16 @@ export class CreateLandingPage implements OnInit {
         };
 
         // ================= ALL IN ONE SECTION =================
+
         this.allInOneCards = (data?.allInOneSection || []).map((item: any) => {
+          if (this.allInOneCards.length > 0) {
+            this.isUploaded = true;
+          }
           const img = item?.image || '';
 
+
           return {
+
             heading: item?.heading || '',
             subHeading: item?.subHeading || '',
             paragraph: item?.description || '',
@@ -306,7 +315,7 @@ export class CreateLandingPage implements OnInit {
         heading: this.heroData.heading,
         description: this.heroData.paragraph,
         keyword: this.heroData.keyword,
-        image: this.heroData.imagePath,
+        image: this.heroData.image,
       },
 
       allInOneSection: this.allInOneCards.map((card) => ({
@@ -404,7 +413,7 @@ export class CreateLandingPage implements OnInit {
 
       isValid = !Object.values(this.heroErrors).includes(true);
     }
-    
+
     if (section === 'all') {
       this.allInOneCards.forEach((card, i) => {
         if (!this.allInOneErrors[i]) {
@@ -412,7 +421,7 @@ export class CreateLandingPage implements OnInit {
         }
 
         this.allInOneErrors[i].heading = !card.heading?.trim();
-        this.allInOneErrors[i].subHeading = !card.subHeading?.trim(); 
+        this.allInOneErrors[i].subHeading = !card.subHeading?.trim();
         this.allInOneErrors[i].paragraph = !card.paragraph?.trim();
 
         // Hero style image validation
@@ -428,7 +437,7 @@ export class CreateLandingPage implements OnInit {
         }
       });
 
-      isValid = !this.allInOneErrors.some((e) => e.heading  || e.subHeading || e.paragraph || e.image);
+      isValid = !this.allInOneErrors.some((e) => e.heading || e.subHeading || e.paragraph || e.image);
     }
     // if (section === 'why') {
     //   this.whyErrors.heading = !this.whyChooseUsData.heading?.trim();
@@ -568,7 +577,7 @@ export class CreateLandingPage implements OnInit {
   // All-in-One Image Selection
   // ===============================
 
-  
+
   onAllInOneImage(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -595,7 +604,7 @@ export class CreateLandingPage implements OnInit {
     this.allInOneErrors[index].image = false;
     card.imageErrorMsg = '';
   }
-  
+
   uploadAllInOneImage(index: number) {
     const card = this.allInOneCards[index];
 

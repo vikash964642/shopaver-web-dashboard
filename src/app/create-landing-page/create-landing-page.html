@@ -8,52 +8,32 @@
     </div>
 
     <div class="sidebar-main-container">
-      <div
-        class="sidebar-item"
-        [class.active]="activeSection === 'title'"
-        [class.disabled]="mode === 'create'"
-        (click)="mode === 'edit' ? setActiveSection('title') : null"
-      >
+      <div class="sidebar-item" [class.active]="activeSection === 'title'" [class.disabled]="mode === 'create'"
+        (click)="mode === 'edit' ? setActiveSection('title') : null">
         <span>Title & Desc. Info</span>
         <span class="arrow">›</span>
       </div>
 
-      <div
-        class="sidebar-item"
-        [class.active]="activeSection === 'hero'"
-        [class.disabled]="mode === 'create'"
-        (click)="mode === 'edit' ? setActiveSection('hero') : null"
-      >
+      <div class="sidebar-item" [class.active]="activeSection === 'hero'" [class.disabled]="mode === 'create'"
+        (click)="mode === 'edit' ? setActiveSection('hero') : null">
         <span>Hero Section</span>
         <span class="arrow">›</span>
       </div>
 
-      <div
-        class="sidebar-item"
-        [class.active]="activeSection === 'all'"
-        [class.disabled]="mode === 'create'"
-        (click)="mode === 'edit' ? setActiveSection('all') : null"
-      >
+      <div class="sidebar-item" [class.active]="activeSection === 'all'" [class.disabled]="mode === 'create'"
+        (click)="mode === 'edit' ? setActiveSection('all') : null">
         <span>All in one Section</span>
         <span class="arrow">›</span>
       </div>
 
-      <div
-        class="sidebar-item"
-        [class.active]="activeSection === 'why'"
-        [class.disabled]="mode === 'create'"
-        (click)="mode === 'edit' ? setActiveSection('why') : null"
-      >
+      <div class="sidebar-item" [class.active]="activeSection === 'why'" [class.disabled]="mode === 'create'"
+        (click)="mode === 'edit' ? setActiveSection('why') : null">
         <span>Why choose us Section</span>
         <span class="arrow">›</span>
       </div>
 
-      <div
-        class="sidebar-item"
-        [class.active]="activeSection === 'faq'"
-        [class.disabled]="false"
-        (click)="setActiveSection('faq')"
-      >
+      <div class="sidebar-item" [class.active]="activeSection === 'faq'" [class.disabled]="false"
+        (click)="setActiveSection('faq')">
         <span>Faq Section</span>
         <span class="arrow">›</span>
       </div>
@@ -67,22 +47,12 @@
         {{ mode === 'edit' ? 'Update' : 'Save' }}
       </button> -->
       <!-- UPDATE BUTTON: har section me visible in edit mode -->
-      <button
-        class="save"
-        type="button"
-        *ngIf="mode === 'edit' && activeSection !== 'faq'"
-        (click)="savePage()"
-      >
+      <button class="save" type="button" *ngIf="mode === 'edit' && activeSection !== 'faq'" (click)="savePage()">
         Update
       </button>
 
       <!-- SAVE BUTTON: sirf last section me visible -->
-      <button
-        class="save"
-        type="button"
-        *ngIf="mode === 'create' && activeSection === 'why'"
-        (click)="savePage()"
-      >
+      <button class="save" type="button" *ngIf="mode === 'create' && activeSection === 'why'" (click)="savePage()">
         Save
       </button>
     </div>
@@ -91,40 +61,22 @@
       <div class="Title-section" *ngIf="activeSection === 'title'">
         <div>
           <label>Title*</label>
-          <input
-            type="text"
-            name="metaTitle"
-            [ngModelOptions]="{ standalone: true }"
-            [(ngModel)]="titleData.title"
-            (input)="titleErrors.title = false"
-            [class.invalid]="titleErrors.title"
-            placeholder="Write Title"
-          />
+          <input type="text" name="metaTitle" [ngModelOptions]="{ standalone: true }" [(ngModel)]="titleData.title"
+            (input)="titleErrors.title = false" [class.invalid]="titleErrors.title" placeholder="Write Title" />
           <div class="error" *ngIf="titleErrors.title">This field is required</div>
         </div>
 
         <div>
           <label>Description*</label>
-          <textarea
-            name="metaDescription"
-            [(ngModel)]="titleData.description"
-            placeholder="Write Description"
-            [class.invalid]="titleErrors.description"
-            (input)="titleErrors.description = false"
-          ></textarea>
+          <textarea name="metaDescription" [(ngModel)]="titleData.description" placeholder="Write Description"
+            [class.invalid]="titleErrors.description" (input)="titleErrors.description = false"></textarea>
           <div class="error" *ngIf="titleErrors.description">This field is required</div>
         </div>
 
         <div>
           <label>Slug*</label>
-          <input
-            type="text"
-            name="slug"
-            [(ngModel)]="titleData.slug"
-            placeholder="example-landing-page"
-            [class.invalid]="titleErrors.slug"
-            (input)="titleErrors.slug = false; slugError = ''"
-          />
+          <input type="text" name="slug" [(ngModel)]="titleData.slug" placeholder="example-landing-page"
+            [class.invalid]="titleErrors.slug" (input)="titleErrors.slug = false; slugError = ''" />
           <div class="error" *ngIf="titleErrors.slug">
             {{ slugError || 'This field is required' }}
           </div>
@@ -137,39 +89,22 @@
       <div class="Hero-section" *ngIf="activeSection === 'hero'">
         <div>
           <label>Heading</label>
-          <input
-            type="text"
-            name="heroHeading"
-            [(ngModel)]="heroData.heading"
-            [class.invalid]="heroErrors.heading"
-            (input)="heroErrors.heading = false"
-          />
+          <input type="text" name="heroHeading" [(ngModel)]="heroData.heading" [class.invalid]="heroErrors.heading"
+            (input)="heroErrors.heading = false" />
           <div class="error" *ngIf="heroErrors.heading">This field is required</div>
         </div>
 
         <div>
           <label>Keyword</label>
-          <input
-            type="text"
-            name="heroKeyword"
-            [(ngModel)]="heroData.keyword"
-            (input)="heroErrors.keyword = false"
-            [class.invalid]="heroErrors.keyword"
-            ,
-          />
+          <input type="text" name="heroKeyword" [(ngModel)]="heroData.keyword" (input)="heroErrors.keyword = false"
+            [class.invalid]="heroErrors.keyword" , />
           <div class="error" *ngIf="heroErrors.keyword">This field is required</div>
         </div>
 
         <div>
           <label>Paragraph</label>
-          <input
-            type="text"
-            name="heroParagraph"
-            [(ngModel)]="heroData.paragraph"
-            (input)="heroErrors.paragraph = false"
-            [class.invalid]="heroErrors.paragraph"
-            ,
-          />
+          <input type="text" name="heroParagraph" [(ngModel)]="heroData.paragraph"
+            (input)="heroErrors.paragraph = false" [class.invalid]="heroErrors.paragraph" , />
           <div class="error" *ngIf="heroErrors.paragraph">This field is required</div>
         </div>
 
@@ -183,20 +118,16 @@
           <label>Image</label>
 
           <!-- hidden file input -->
-          <input
-            type="file"
-            #heroFileInput
-            (change)="onHeroImage($event); heroErrors.image = false"
-            style="display: none"
-          />
+          <input type="file" #heroFileInput (change)="onHeroImage($event); heroErrors.image = false"
+            style="display: none" />
 
           <!-- custom file chooser -->
           <div class="custom-file" (click)="heroFileInput.click()">
             <span>
               {{
-                heroData.image?.name ||
-                  (heroData.imagePath ? heroData.imagePath.split('/').pop() : null) ||
-                  'Choose file'
+              heroData.image?.name ||
+              (heroData.imagePath ? heroData.imagePath.split('/').pop() : null) ||
+              'Choose file'
               }}
             </span>
             <button type="button">Browse</button>
@@ -208,11 +139,8 @@
           </div>
 
           <div *ngIf="heroData.imagePath">
-            <img
-              [src]="heroData.imagePath"
-              [src]="isUploaded ? baseUrl + heroData.imagePath : heroData.imagePath"
-              style="max-width: 200px; margin-top: 10px"
-            />
+            <img [src]="heroData.imagePath" [src]="isUploaded ? baseUrl + heroData.imagePath : heroData.imagePath"
+              style="max-width: 200px; margin-top: 10px" />
           </div>
         </div>
         <button class="save" *ngIf="heroData.image" type="button" (click)="uploadHeroImage()">
@@ -228,51 +156,25 @@
       <!-- ALL IN ONE -->
       <div class="all-in-one-section" *ngIf="activeSection === 'all'">
         <div *ngFor="let card of allInOneCards; let i = index">
-          <input
-            type="text"
-            name="heading{{ i }}"
-            [(ngModel)]="card.heading"
-            placeholder="Heading"
-            (input)="allInOneErrors[i].heading = false"
-            [class.invalid]="allInOneErrors[i]?.heading"
-            ,
-          />
+          <input type="text" name="heading{{ i }}" [(ngModel)]="card.heading" placeholder="Heading"
+            (input)="allInOneErrors[i].heading = false" [class.invalid]="allInOneErrors[i]?.heading" , />
           <div class="error" *ngIf="allInOneErrors[i]?.heading">This field is required</div>
-          <input
-            type="text"
-            name="subHeading{{ i }}"
-            [(ngModel)]="card.subHeading"
-            placeholder="Subheading"
-            (input)="allInOneErrors[i].subHeading = false"
-            [class.invalid]="allInOneErrors[i]?.subHeading"
-            ,
-          />
+          <input type="text" name="subHeading{{ i }}" [(ngModel)]="card.subHeading" placeholder="Subheading"
+            (input)="allInOneErrors[i].subHeading = false" [class.invalid]="allInOneErrors[i]?.subHeading" , />
           <div class="error" *ngIf="allInOneErrors[i]?.subHeading">This field is required</div>
-          <input
-            type="text"
-            name="paragraph{{ i }}"
-            [(ngModel)]="card.paragraph"
-            placeholder="Paragraph"
-            (input)="allInOneErrors[i].paragraph = false"
-            [class.invalid]="allInOneErrors[i]?.paragraph"
-            ,
-          />
+          <input type="text" name="paragraph{{ i }}" [(ngModel)]="card.paragraph" placeholder="Paragraph"
+            (input)="allInOneErrors[i].paragraph = false" [class.invalid]="allInOneErrors[i]?.paragraph" , />
           <div class="error" *ngIf="allInOneErrors[i]?.paragraph">This field is required</div>
-          <input
-            type="file"
-            #allFileInput
-            (change)="onAllInOneImage($event, i); allInOneErrors[i].image = false"
-            [class.invalid]="allInOneErrors[i]?.image"
-            style="display: none"
-          />
+          <input type="file" #allFileInput (change)="onAllInOneImage($event, i); allInOneErrors[i].image = false"
+            [class.invalid]="allInOneErrors[i]?.image" style="display: none" />
           <div class="custom-file" (click)="allFileInput.click()">
             <span>
               {{
-                allInOneCards[i].image?.name ||
-                  (allInOneCards[i].imagePath
-                    ? allInOneCards[i].imagePath.split('/').pop()
-                    : null) ||
-                  'Choose file'
+              allInOneCards[i].image?.name ||
+              (allInOneCards[i].imagePath
+              ? allInOneCards[i].imagePath.split('/').pop()
+              : null) ||
+              'Choose file'
               }}
             </span>
             <button type="button">Browse</button>
@@ -288,22 +190,16 @@
           <div class="error" *ngIf="allInOneErrors[i]?.image">{{ card.imageErrorMsg }}</div>
 
           <div *ngIf="card.imagePath">
-            <img
-              [src]="card.isUploaded ? baseUrl + card.imagePath : card.imagePath"
-              style="max-width: 200px; margin-top: 10px"
-            />
+            <img [src]="card.imagePath.startsWith('http') 
+            ? card.imagePath 
+            : baseUrl + card.imagePath" style="max-width: 200px; margin-top: 10px" />
           </div>
           <div style="display: flex; flex-direction: row; gap: 10px">
             <button class="save" *ngIf="card.image" type="button" (click)="uploadAllInOneImage(i)">
               Upload Image
             </button>
 
-            <button
-              class="save"
-              type="button"
-              *ngIf="allInOneCards.length > 1"
-              (click)="removeAllInOneCard(i)"
-            >
+            <button class="save" type="button" *ngIf="allInOneCards.length > 1" (click)="removeAllInOneCard(i)">
               Remove
             </button>
           </div>
@@ -346,55 +242,28 @@
         <!-- Card 1 -->
         <div>
           <label>Heading 1</label>
-          <input
-            type="text"
-            name="whyHeading1"
-            [(ngModel)]="whyHeading1"
-            placeholder="Enter heading for card 1"
-          />
+          <input type="text" name="whyHeading1" [(ngModel)]="whyHeading1" placeholder="Enter heading for card 1" />
           <label>Paragraph 1</label>
-          <input
-            type="text"
-            name="whyParagraph1"
-            [(ngModel)]="whyParagraph1"
-            placeholder="Enter paragraph for card 1"
-          />
+          <input type="text" name="whyParagraph1" [(ngModel)]="whyParagraph1"
+            placeholder="Enter paragraph for card 1" />
         </div>
 
         <!-- Card 2 -->
         <div>
           <label>Heading 2</label>
-          <input
-            type="text"
-            name="whyHeading2"
-            [(ngModel)]="whyHeading2"
-            placeholder="Enter heading for card 2"
-          />
+          <input type="text" name="whyHeading2" [(ngModel)]="whyHeading2" placeholder="Enter heading for card 2" />
           <label>Paragraph 2</label>
-          <input
-            type="text"
-            name="whyParagraph2"
-            [(ngModel)]="whyParagraph2"
-            placeholder="Enter paragraph for card 2"
-          />
+          <input type="text" name="whyParagraph2" [(ngModel)]="whyParagraph2"
+            placeholder="Enter paragraph for card 2" />
         </div>
 
         <!-- Card 3 -->
         <div>
           <label>Heading 3</label>
-          <input
-            type="text"
-            name="whyHeading3"
-            [(ngModel)]="whyHeading3"
-            placeholder="Enter heading for card 3"
-          />
+          <input type="text" name="whyHeading3" [(ngModel)]="whyHeading3" placeholder="Enter heading for card 3" />
           <label>Paragraph 3</label>
-          <input
-            type="text"
-            name="whyParagraph3"
-            [(ngModel)]="whyParagraph3"
-            placeholder="Enter paragraph for card 3"
-          />
+          <input type="text" name="whyParagraph3" [(ngModel)]="whyParagraph3"
+            placeholder="Enter paragraph for card 3" />
         </div>
 
         <button class="save" type="button" (click)="prevSection('all')">Previous</button>
@@ -402,12 +271,7 @@
       <!-- FAQ -->
       <div class="faq-section" *ngIf="activeSection === 'faq'">
         <div *ngFor="let faq of faqs; let i = index">
-          <input
-            type="text"
-            name="question{{ i }}"
-            [(ngModel)]="faq.question"
-            placeholder="Question"
-          />
+          <input type="text" name="question{{ i }}" [(ngModel)]="faq.question" placeholder="Question" />
 
           <input type="text" name="answer{{ i }}" [(ngModel)]="faq.answer" placeholder="Answer" />
 
@@ -422,7 +286,7 @@
           <button class="save" type="button" (click)="prevSection('why')">Previous</button>
 
           <!-- FINAL SAVE -->
-          <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} FAQ</button>
+          <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} faq</button>
         </div>
       </div>
     </form>
