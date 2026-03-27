@@ -32,8 +32,8 @@
         <span class="arrow">›</span>
       </div>
 
-      <div class="sidebar-item" [class.active]="activeSection === 'faq'" [class.disabled]="false"
-        (click)="setActiveSection('faq')">
+      <div class="sidebar-item" [class.active]="activeSection === 'faq'" [class.disabled]="mode === 'create'"
+        (click)="mode === 'edit' ? setActiveSection('faq') : null">
         <span>Faq Section</span>
         <span class="arrow">›</span>
       </div>
@@ -286,7 +286,10 @@
           <button class="save" type="button" (click)="prevSection('why')">Previous</button>
 
           <!-- FINAL SAVE -->
-          <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} faq</button>
+          <!-- <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} faq</button> -->
+           <button class="save" (click)="saveFaq(mode)" type="button">
+  {{ mode === 'edit' ? 'Update FAQ' : 'Save FAQ' }}
+</button>
         </div>
       </div>
     </form>

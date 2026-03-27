@@ -126,7 +126,7 @@ export class CreateLandingPage implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Slug check failed', err);
+       
         this.toastr.error('Failed to check slug');
       },
     });
@@ -149,7 +149,7 @@ export class CreateLandingPage implements OnInit {
     
     this.landingService.getLandingPageBySlug(slug).subscribe({
       next: (res: any) => {
-        console.log('Landing page data:', res);
+       
 
         const data = res?.data || {};
 
@@ -315,7 +315,8 @@ export class CreateLandingPage implements OnInit {
         heading: this.heroData.heading,
         description: this.heroData.paragraph,
         keyword: this.heroData.keyword,
-        image: this.heroData.image,
+        // image: this.heroData.image,
+          image: this.heroData.imagePath,
       },
 
       allInOneSection: this.allInOneCards.map((card) => ({
@@ -477,9 +478,7 @@ export class CreateLandingPage implements OnInit {
   prevSection(section: string) {
     this.activeSection = section;
   }
-  // ===============================
-  // SAVE PAGE
-  // ===============================
+  
   validateWhyChooseUs(): boolean {
     let isValid = true;
 
@@ -508,30 +507,31 @@ export class CreateLandingPage implements OnInit {
     }
     const payload = this.buildPayload();
 
-    console.log('Payload:', payload);
+  
 
     if (this.mode === 'edit') {
       // UPDATE API
       this.landingService.updateLandingPage(this.slug!, payload).subscribe({
         next: (res) => {
-          console.log('✅ Page Updated', res);
+        
           this.toastr.success('Landing Page Updated Successfully');
           // this.router.navigate(['/landing-page-list']);
         },
 
         error: (err) => {
-          // console.error('❌ Update Error', err);
+       
           this.toastr.error('Failed to update page');
         },
       });
     } else {
       this.landingService.addLandingPage(payload).subscribe({
         next: (res: any) => {
-          console.log('API Response', res);
+       
 
           if (res.status && res.status.toLowerCase() === 'success') {
             // Success
             this.toastr.success('Landing Page Saved Successfully');
+            this.activeSection = 'faq';
             // this.router.navigate(['/landing-page-list']);
           } else {
             // Any failure
@@ -540,7 +540,7 @@ export class CreateLandingPage implements OnInit {
         },
 
         error: (err) => {
-          console.error('❌ Error saving page', err);
+         
           this.toastr.error('Failed to save page');
         },
       });
@@ -556,14 +556,14 @@ export class CreateLandingPage implements OnInit {
 
     this.landingService.uploadBannerImage(this.heroData.image).subscribe({
       next: (res: any) => {
-        console.log('Image Response:', res);
+        
         this.isUploaded = true;
         this.toastr.success('Image uploaded successfully ✅');
         this.heroData.imagePath = res.data;
         this.isImageUploaded = true;
-        // console.log('Saved Path:', this.heroData.imagePath);
+        
         const payload = this.buildPayload();
-        // console.log('Payload:', payload);
+      
         this.heroErrors.image = false;
         this.heroErrors.imageErrorMsg = '';
         this.heroData.image = null;
@@ -628,13 +628,13 @@ export class CreateLandingPage implements OnInit {
         }
         card.imageErrorMsg = '';
 
-        console.log('Server Path Saved:', card.imagePath);
+        
       },
       error: (err) => this.toastr.error('Failed to upload image ❌'),
     });
   }
   saveFaq(mode: string) {
-    console.table(this.faqs);
+   
     if (this.gotEmptyFaq) {
       this.addFaqs();
     } else {
@@ -643,7 +643,7 @@ export class CreateLandingPage implements OnInit {
   }
 
   addFaqs() {
-    console.log('Adding FAQs:', this.faqs);
+   
     const validFaqs = this.faqs.filter((f) => f.question && f.answer);
 
     if (validFaqs.length === 0) {
@@ -668,7 +668,7 @@ export class CreateLandingPage implements OnInit {
     });
   }
   updateFaq() {
-    console.log('Updating FAQs:', this.faqs);
+   
     // Filter out empty FAQs
     const validFaqs = this.faqs.filter((f) => f.question && f.answer);
 
