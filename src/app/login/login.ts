@@ -23,7 +23,12 @@ export class Login {
       Password: ['', Validators.required]
     });
   }
-
+ngOnInit() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    this.router.navigate(['/landing-page-list']);
+  }
+}
   // Easy access getter
   get f() {
     return this.loginForm.controls;
@@ -45,14 +50,24 @@ export class Login {
   };
 
   this.authService.login(payload).subscribe({
-    next: (res) => {
-      console.log("Login Success:", res);
-   this.toastr.success('Login successful ✅');
-      this.router.navigate(
-        ['/landing-page-list'],
-        { replaceUrl: true }
-      );
-    },
+  //   next: (res) => {
+  //     console.log("Login Success:", res);
+  //  this.toastr.success('Login successful ✅');
+  //     this.router.navigate(
+  //       ['/landing-page-list'],
+  //       { replaceUrl: true }
+  //     );
+  //   },
+  next: (res) => {
+  console.log("Login Success:", res);
+
+  // ✅ Save token (adjust key based on API response)
+  localStorage.setItem('token', res?.data?.token || 'loggedIn');
+
+  this.toastr.success('Login successful ✅');
+
+  this.router.navigate(['/landing-page-list'], { replaceUrl: true });
+},
     error: (err) => {
       console.error("Login Failed:", err);
       alert(err?.error?.description || "Login failed");
