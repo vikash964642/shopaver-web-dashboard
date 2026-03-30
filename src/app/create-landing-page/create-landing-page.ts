@@ -543,6 +543,7 @@ loadFaqBySlug(slug: string): void {
         next: (res) => {
         
           this.toastr.success('Landing Page Updated Successfully');
+          this.cd.detectChanges();
           // this.router.navigate(['/landing-page-list']);
         },
 
@@ -574,7 +575,12 @@ loadFaqBySlug(slug: string): void {
       });
     }
   }
-
+handleSectionClick(section: string) {
+  if (this.mode === 'create') return; // block in create mode
+  this.activeSection = section;
+   this.cd.detectChanges();
+  
+}
   isImageUploaded = false;
   uploadHeroImage() {
     if (!this.heroData.image) {
