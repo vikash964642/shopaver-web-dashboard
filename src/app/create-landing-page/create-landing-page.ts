@@ -216,32 +216,60 @@ export class CreateLandingPage implements OnInit {
   }
 
   gotEmptyFaq = false;
-  loadFaqBySlug(slug: string): void {
-    this.landingService.getFAQBySlug(slug).subscribe({
-      next: (res: any) => {
-        const data = res?.data ?? [];
+  // loadFaqBySlug(slug: string): void {
+  //   this.landingService.getFAQBySlug(slug).subscribe({
+  //     next: (res: any) => {
+  //       const data = res?.data ?? [];
 
-        this.faqs = data
-          .flatMap((item: any) => item.faq || [])
-          .map((f: any) => ({
-            question: f.title ?? '',
-            answer: f.description ?? '',
-          }));
+  //       this.faqs = data
+  //         .flatMap((item: any) => item.faq || [])
+  //         .map((f: any) => ({
+  //           question: f.title ?? '',
+  //           answer: f.description ?? '',
+  //         }));
 
-        if (!this.faqs.length) {
-          this.gotEmptyFaq = true;
-          this.faqs = [{ question: '', answer: '' }];
-        }
+  //       if (!this.faqs.length) {
+  //         this.gotEmptyFaq = true;
+  //         this.faqs = [{ question: '', answer: '' }];
+  //       }
 
-        this.cd.detectChanges();
-      },
+  //       this.cd.detectChanges();
+  //     },
 
-      error: (err) => {
-        console.error('FAQ API Error:', err);
-      },
-    });
-  }
+  //     error: (err) => {
+  //       console.error('FAQ API Error:', err);
+  //     },
+  //   });
+  // }
+loadFaqBySlug(slug: string): void {
+  this.landingService.getFAQBySlug(slug).subscribe({
+    next: (res: any) => {
+      const data = res?.data ?? [];
 
+      const mappedFaqs = data
+        .flatMap((item: any) => item.faq || [])
+        .map((f: any) => ({
+          question: f.title ?? '',
+          answer: f.description ?? '',
+        }));
+
+      // ✅ FIX: Proper flag handling
+      if (mappedFaqs.length === 0) {
+        this.gotEmptyFaq = true;
+        this.faqs = [{ question: '', answer: '' }];
+      } else {
+        this.gotEmptyFaq = false;
+        this.faqs = mappedFaqs;
+      }
+
+      this.cd.detectChanges();
+    },
+
+    error: (err) => {
+      console.error('FAQ API Error:', err);
+    },
+  });
+}
   // Component.ts
   imagePreviewUrl: string | null = null;
 
@@ -633,15 +661,32 @@ export class CreateLandingPage implements OnInit {
       error: (err) => this.toastr.error('Failed to upload image ❌'),
     });
   }
-  saveFaq(mode: string) {
+  // saveFaq(mode: string) {
    
-    if (this.gotEmptyFaq) {
-      this.addFaqs();
-    } else {
-      this.updateFaq();
-    }
+  //   if (this.gotEmptyFaq) {
+  //     this.addFaqs();
+  //   } else {
+  //     this.updateFaq();
+  //   }
+  // }
+  
+saveFaq(mode: string) {
+  const validFaqs = this.faqs.filter(f => f.question && f.answer);
+
+  if (validFaqs.length === 0) {
+    console.warn('No valid FAQs to save');
+    return;
   }
 
+  // 👉 If first time (empty from API)
+  if (this.gotEmptyFaq) {
+    this.addFaqs();
+    return;
+  }
+
+  // 👉 If FAQs already exist → UPDATE
+  this.updateFaq();
+}
   addFaqs() {
    
     const validFaqs = this.faqs.filter((f) => f.question && f.answer);

@@ -179,21 +179,26 @@
             </span>
             <button type="button">Browse</button>
           </div>
-          <!-- <div class="error" *ngIf="allInOneErrors[i]?.image">Please select an image</div>
-      <div *ngIf="card.imagePath">
-  <img 
-    [src]="baseUrl + card.imagePath" 
-    style="max-width: 200px; margin-top: 10px" 
-    alt="Preview"
-  />
-</div> -->
+          
           <div class="error" *ngIf="allInOneErrors[i]?.image">{{ card.imageErrorMsg }}</div>
 
-          <div *ngIf="card.imagePath">
+          <!-- <div *ngIf="card.imagePath">
             <img [src]="card.imagePath.startsWith('http') 
             ? card.imagePath 
             : baseUrl + card.imagePath" style="max-width: 200px; margin-top: 10px" />
-          </div>
+          </div> -->
+          <div *ngIf="card.imagePath">
+  <img 
+    [src]="
+      card.imagePath.startsWith('blob:')
+        ? card.imagePath
+        : card.imagePath.startsWith('http')
+        ? card.imagePath
+        : baseUrl + card.imagePath
+    "
+    style="max-width: 200px; margin-top: 10px" 
+  />
+</div>
           <div style="display: flex; flex-direction: row; gap: 10px">
             <button class="save" *ngIf="card.image" type="button" (click)="uploadAllInOneImage(i)">
               Upload Image
@@ -288,7 +293,7 @@
           <!-- FINAL SAVE -->
           <!-- <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} faq</button> -->
            <button class="save" (click)="saveFaq(mode)" type="button">
-  {{ mode === 'edit' ? 'Update FAQ' : 'Save FAQ' }}
+  {{ gotEmptyFaq ? 'Save FAQ' : 'Update FAQ' }}
 </button>
         </div>
       </div>
