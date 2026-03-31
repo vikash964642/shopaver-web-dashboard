@@ -32,7 +32,7 @@ export class ListComponent implements OnInit {
   ) {}
 
    logout() {
-  localStorage.removeItem('token');
+  localStorage.removeItem('authToken');
   this.router.navigate(['/login']);
 }
 
