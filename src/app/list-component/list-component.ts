@@ -45,7 +45,7 @@ export class ListComponent implements OnInit {
 
   // ✅ ADD THIS METHOD
   openForEdit(slug: string) {
-    console.log('Redirecting with slug:', slug);
+    // console.log('Redirecting with slug:', slug);
     this.router.navigate(['/create-landing-page', slug]);
   }
 
@@ -106,14 +106,14 @@ loadPageCards(page: number = 1, pageSize: number = 10, search: string = ''): voi
 
     this.landingService.deleteLandingPage(slug).subscribe({
       next: () => {
-        console.log('Page Deleted');
+        // console.log('Page Deleted');
 this.toastr.success('Page deleted successfully ✅');
         this.pageCards = this.pageCards.filter((page) => page.slug !== slug);
         this.loadPageCards(); 
       },
 
       error: (err) => {
-        console.error('Delete Error', err);
+        // console.error('Delete Error', err);
         this.toastr.error('Failed to delete page ❌');
       },
     });

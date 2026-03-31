@@ -8,16 +8,17 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
-   standalone: true,
+  standalone: true,
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
- loginForm: FormGroup;
+  loginForm: FormGroup;
   showPassword = false;
   submitted = false;
+  
 
-  constructor(private fb: FormBuilder, private router: Router,  private authService: AuthService,private toastr: ToastrService) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private toastr: ToastrService) {
     this.loginForm = this.fb.group({
       UserId: ['', Validators.required],
       Password: ['', Validators.required]
@@ -38,40 +39,59 @@ ngOnInit() {
     this.showPassword = !this.showPassword;
   }
 
- onSubmit() {
-  console.log("clicked");
+ onSubmit(): void {
   this.submitted = true;
 
-  if (this.loginForm.invalid) return;
+  // ✅ Stop if form invalid
+  if (this.loginForm.invalid) {
+    this.toastr.warning('Please fill all required fields');
+    return;
+  }
+
+  // ✅ Disable button / prevent multiple clicks
+ 
 
   const payload = {
-    mobileOrEmail: this.loginForm.value.UserId,
+    mobileOrEmail: this.loginForm.value.UserId?.trim(),
     password: this.loginForm.value.Password
   };
 
   this.authService.login(payload).subscribe({
-  //   next: (res) => {
-  //     console.log("Login Success:", res);
-  //  this.toastr.success('Login successful ✅');
-  //     this.router.navigate(
-  //       ['/landing-page-list'],
-  //       { replaceUrl: true }
-  //     );
-  //   },
-  next: (res) => {
-  console.log("Login Success:", res);
+    next: (res) => {
+      
 
-  // ✅ Save token (adjust key based on API response)
-  localStorage.setItem('token', res?.data?.token || 'loggedIn');
+      // console.log('Login Response:', res);
 
-  this.toastr.success('Login successful ✅');
+      // ✅ Handle API success properly
+      if (res?.status === 'Success' || res?.status === true) {
 
-  this.router.navigate(['/landing-page-list'], { replaceUrl: true });
-},
+        // Token already stored in service (tap)
+        this.toastr.success(res?.description || 'Login successful ✅');
+
+        // ✅ Navigate safely
+        this.router.navigate(['/landing-page-list'], {
+          replaceUrl: true
+        });
+
+      } else {
+        // ❌ API returned failure
+        this.toastr.error('Invalid credentials.');
+      }
+    },
+
     error: (err) => {
-      console.error("Login Failed:", err);
-      alert(err?.error?.description || "Login failed");
-       this.toastr.error('Invalid credentials ❌');
+      
+      console.error('Login Error:', err);
+
+      // ✅ Better error handling
+      const message =
+        err?.error?.description ||
+        err?.error?.message ||
+        'Something went wrong. Please try again';
+        // console.log('Error Message:', message);
+
+      this.toastr.error('Login Error: ' + message);
+
     }
   });
 }
