@@ -31,7 +31,10 @@ export class ListComponent implements OnInit {
     
   ) {}
 
- 
+   logout() {
+  localStorage.removeItem('token');
+  this.router.navigate(['/login']);
+}
 
   goTo(path: string) {
   this.router.navigate([path]);

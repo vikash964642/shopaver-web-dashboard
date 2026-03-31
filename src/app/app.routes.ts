@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './login/login';
+import { AuthGuard } from './auth-guard';
 export const routes: Routes = [
    {
     path: '',
@@ -20,23 +21,27 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./list-component/list-component')
         .then(m => m.ListComponent),
+         canActivate: [AuthGuard],
   },
   {
     path: 'landing-page-data',
     loadComponent: () =>
       import('./form-data/form-data')
         .then(m => m.FormData),
+         canActivate: [AuthGuard],
   },
   {
     path: 'create-landing-page',
     loadComponent: () =>
       import('./create-landing-page/create-landing-page') 
         .then(m => m.CreateLandingPage),
+         canActivate: [AuthGuard],
   },
   {
     path: 'create-landing-page/:slug',
     loadComponent: () =>
       import('./create-landing-page/create-landing-page')
         .then(m => m.CreateLandingPage),
+         canActivate: [AuthGuard],
   },
 ];

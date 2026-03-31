@@ -95,7 +95,22 @@
     background: #6a00ff;
   }
 }
-
+.logoutbtn{
+  position: absolute;
+  bottom: 30px;
+  padding-left: 16px;
+  button{
+    height: 40px;
+    width: 100px;
+    background-color: red;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFF;
+    cursor: pointer;
+  }
+}
 .main-container {
   flex: 1;
   padding: 25px;

@@ -29,9 +29,12 @@ export class FormData implements OnInit, OnDestroy {
   searchText: string = '';
   page: number = 1;
   pageSize: number = 10;
-
   isLoading = false;
 
+  logout() {
+  localStorage.removeItem('token');
+  this.router.navigate(['/login']);
+}
   // =========================
   // INTERNAL HANDLING
   // =========================
