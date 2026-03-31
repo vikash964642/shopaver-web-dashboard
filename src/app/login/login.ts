@@ -60,7 +60,7 @@ ngOnInit() {
     next: (res) => {
       
 
-      console.log('Login Response:', res);
+      // console.log('Login Response:', res);
 
       // ✅ Handle API success properly
       if (res?.status === 'Success' || res?.status === true) {
@@ -88,7 +88,7 @@ ngOnInit() {
         err?.error?.description ||
         err?.error?.message ||
         'Something went wrong. Please try again';
-        console.log('Error Message:', message);
+        // console.log('Error Message:', message);
 
       this.toastr.error('Login Error: ' + message);
 
