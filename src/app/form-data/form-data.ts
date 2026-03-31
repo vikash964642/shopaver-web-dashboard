@@ -32,7 +32,7 @@ export class FormData implements OnInit, OnDestroy {
   isLoading = false;
 
   logout() {
-  localStorage.removeItem('token');
+  localStorage.removeItem('authToken');
   this.router.navigate(['/login']);
 }
   // =========================

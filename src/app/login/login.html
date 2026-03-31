@@ -30,6 +30,7 @@
   }
   .login-heading2 {
     margin-bottom: 0px;
+    margin-top: 0px;
     font-weight: 700;
     font-size: 30px;
     color: #131118;
@@ -236,7 +237,7 @@
 
     <div class="m-0 p-0 pt-4 pt-lg-0 d-flex justify-content-center">
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="d-flex">
+        <div style="display: flex; align-items: center; gap: 3px;">
           <p class="login-heading2">Hey, Welcome Back</p>
           <img src="assets/image/LogIn2-Hand.png" />
         </div>
@@ -276,14 +277,13 @@
         <div class="error-msg" *ngIf="submitted && f['Password'].errors">
           <div>Password is required.</div>
         </div>
-        <p class="forgot-pass-para">Forgot Password?</p>
+        <!-- <p class="forgot-pass-para">Forgot Password?</p> -->
 
         <button type="submit" class="login-btn-sec login-btn-para btn">Login</button>
-        <div class="signup-sec">
+        <!-- <div class="signup-sec">
           <p class="signup-sec-para1">Don’t have account?</p>
-          <!-- <p class="signup-sec-para2" (click)="signUpPage()">Signup</p> -->
           <a routerLink="/Sign-up" class="signup-sec-para2">Signup</a>
-        </div>
+        </div> -->
         <div class="login-pci-sec">
           <img src="assets/image/login-pciLogo.png" />
         </div>

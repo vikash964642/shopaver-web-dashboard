@@ -69,9 +69,10 @@ ngOnInit() {
         this.toastr.success(res?.description || 'Login successful ✅');
 
         // ✅ Navigate safely
-        this.router.navigate(['/landing-page-list'], {
-          replaceUrl: true
-        });
+        // this.router.navigate(['/landing-page-list'], {
+        //   replaceUrl: true
+        // });
+        this.router.navigate(['/landing-page-list']);
 
       } else {
         // ❌ API returned failure
