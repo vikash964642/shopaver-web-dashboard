@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-form-data',
@@ -19,7 +20,8 @@ export class FormData implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private landingService: LandingService
+    private landingService: LandingService,
+    private toastr: ToastrService,
   ) {}
 
   // =========================
@@ -34,6 +36,8 @@ export class FormData implements OnInit, OnDestroy {
   logout() {
   localStorage.removeItem('authToken');
   this.router.navigate(['/login']);
+  this.toastr.success('Logout successfully ✅');
+
 }
   // =========================
   // INTERNAL HANDLING

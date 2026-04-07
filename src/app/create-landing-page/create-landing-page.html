@@ -62,15 +62,23 @@
         <div>
           <label>Title*</label>
           <input type="text" name="metaTitle" [ngModelOptions]="{ standalone: true }" [(ngModel)]="titleData.title"
-            (input)="titleErrors.title = false" [class.invalid]="titleErrors.title" placeholder="Write Title" />
-          <div class="error" *ngIf="titleErrors.title">This field is required</div>
+             (input)="validateTitle()" [class.invalid]="titleErrors.title" placeholder="Write Title" />
+          <!-- <div class="error" *ngIf="titleErrors.title">This field is required</div> -->
+           <div class="error" *ngIf="titleErrors.title">
+  {{ titleErrorMsg }}
+</div>
+
+          
         </div>
 
         <div>
           <label>Description*</label>
           <textarea name="metaDescription" [(ngModel)]="titleData.description" placeholder="Write Description"
-            [class.invalid]="titleErrors.description" (input)="titleErrors.description = false"></textarea>
-          <div class="error" *ngIf="titleErrors.description">This field is required</div>
+            [class.invalid]="titleErrors.description" (input)="validateDescription()"></textarea>
+          <!-- <div class="error" *ngIf="titleErrors.description">This field is required</div> -->
+           <div class="error" *ngIf="titleErrors.description">
+  {{ descriptionErrorMsg }}
+</div>
         </div>
 
         <div>
@@ -108,17 +116,12 @@
           <div class="error" *ngIf="heroErrors.paragraph">This field is required</div>
         </div>
 
-        <!-- <div>
-          <label>Image</label>
-          <input type="file"  (change)="onHeroImage($event); heroErrors.image = false"
-  [class.invalid]="heroErrors.image"/>
-          <div class="error" *ngIf="heroErrors.image">Please select an image</div>
-        </div> -->
+      
         <div>
           <label>Image</label>
 
           <!-- hidden file input -->
-          <input type="file" #heroFileInput (change)="onHeroImage($event); heroErrors.image = false"
+          <input type="file" #heroFileInput  accept="image/png, image/jpeg, image/webp" (change)="onHeroImage($event); heroErrors.image = false"
             style="display: none" />
 
           <!-- custom file chooser -->
@@ -165,7 +168,7 @@
           <input type="text" name="paragraph{{ i }}" [(ngModel)]="card.paragraph" placeholder="Paragraph"
             (input)="allInOneErrors[i].paragraph = false" [class.invalid]="allInOneErrors[i]?.paragraph" , />
           <div class="error" *ngIf="allInOneErrors[i]?.paragraph">This field is required</div>
-          <input type="file" #allFileInput (change)="onAllInOneImage($event, i); allInOneErrors[i].image = false"
+          <input type="file" accept="image/png, image/jpeg, image/webp" #allFileInput (change)="onAllInOneImage($event, i); allInOneErrors[i].image = false"
             [class.invalid]="allInOneErrors[i]?.image" style="display: none" />
           <div class="custom-file" (click)="allFileInput.click()">
             <span>
@@ -182,11 +185,6 @@
           
           <div class="error" *ngIf="allInOneErrors[i]?.image">{{ card.imageErrorMsg }}</div>
 
-          <!-- <div *ngIf="card.imagePath">
-            <img [src]="card.imagePath.startsWith('http') 
-            ? card.imagePath 
-            : baseUrl + card.imagePath" style="max-width: 200px; margin-top: 10px" />
-          </div> -->
           <div *ngIf="card.imagePath">
   <img 
     [src]="
@@ -218,31 +216,7 @@
         </div>
       </div>
 
-      <!-- WHY CHOOSE US -->
-      <!-- <div class="why-choose-us-section" *ngIf="activeSection === 'why'">
-        <input
-          type="text"
-          name="whyHeading"
-          [(ngModel)]="whyChooseUsData.heading"
-          placeholder="Heading"
-          (input)="whyErrors.heading = false"
-          [class.invalid]="whyErrors.heading"
-          ,
-        />
-        <div class="error" *ngIf="whyErrors.heading">This field is required</div>
-        <input
-          type="text"
-          name="whyParagraph"
-          [(ngModel)]="whyChooseUsData.paragraph"
-          placeholder="Paragraph"
-          (input)="whyErrors.paragraph = false"
-          [class.invalid]="whyErrors.paragraph"
-          ,
-        />
-        <div class="error" *ngIf="whyErrors.paragraph">This field is required</div>
-
-        <button class="save" type="button" (click)="prevSection('all')">Previous</button>
-      </div> -->
+     
       <div class="why-choose-us-section" *ngIf="activeSection === 'why'">
         <!-- Card 1 -->
         <div>
@@ -288,7 +262,7 @@
         <div style="display: flex; flex-direction: row; gap: 10px">
           <button class="add-btn" type="button" (click)="addFaq()">+ Add FAQ</button>
 
-          <button class="save" type="button" (click)="prevSection('why')">Previous</button>
+          <!-- <button class="save" type="button" (click)="prevSection('why')">Previous</button> -->
 
           <!-- FINAL SAVE -->
           <!-- <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} faq</button> -->

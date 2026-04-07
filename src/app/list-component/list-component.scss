@@ -6,11 +6,12 @@
  
 .commerce-sidebar {
   width: 218px;
-  height: 100vh;
+  // height: 100%;
   background: #ffffff;
   border-right: 1px solid #e6e6e6;
   padding: 17px 0;
- 
+  display: flex;
+  flex-direction: column; 
   .sidebar-head {
     display: flex;
     align-items: center;
@@ -44,11 +45,16 @@
  
  
 
- 
+ .container-sec{
+  display: flex;
+  min-height: 97vh;
+ }
  
 .sidebar-main-container {
   margin-top: 10px;
- 
+ flex: 1;
+ display: flex;
+ flex-direction: column;
   .sidebar-item {
     display: flex;
     justify-content: space-between;
@@ -57,7 +63,7 @@
     font-size: 16px;
     color: #555;
     cursor: pointer;
-    position: relative;
+    // position: relative;
     transition:
       background 0.2s ease,
       color 0.2s ease;
@@ -70,20 +76,28 @@
     }
   }
  
-  .sidebar-item:hover {
-    background: #f5f0ff;
-  }
+  // .sidebar-item:hover {
+  //   background: #f5f0ff;
+  // }
  
-  .sidebar-item.active {
-    color: #6a00ff;
-    font-weight: 600;
-    background: #faf7ff;
+  // .sidebar-item.active {
+  //   color: #6a00ff;
+  //   font-weight: 600;
+  //   background: #faf7ff;
  
-    .arrow {
-      transform: rotate(90deg);
-    }
-  }
- 
+  //   .arrow {
+  //     transform: rotate(90deg);
+  //   }
+  // }
+ .sidebar-item:hover,
+.sidebar-item.active {
+  background: #f5f0ff;
+  color: #5801b7;
+  
+}
+.sidebar-item.active .arrow {
+  transform: rotate(90deg);
+}
   /* RIGHT ACTIVE INDICATOR */
   .sidebar-item.active::before {
     content: "";
@@ -115,7 +129,7 @@
   flex: 1;
   padding: 25px;
   background: #f4f6fb;
-  height: 100vh;
+  min-height: 97vh;
   overflow-y: auto;
 }
 

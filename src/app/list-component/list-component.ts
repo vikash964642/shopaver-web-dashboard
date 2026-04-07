@@ -34,6 +34,7 @@ export class ListComponent implements OnInit {
    logout() {
   localStorage.removeItem('authToken');
   this.router.navigate(['/login']);
+  this.toastr.success('Logout successfully ✅');
 }
 
   goTo(path: string) {
