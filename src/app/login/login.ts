@@ -58,20 +58,9 @@ ngOnInit() {
 
   this.authService.login(payload).subscribe({
     next: (res) => {
-      
+      if (res?.status === 'success' ||   res?.status === 'Success' || res?.status === true) {
 
-      // console.log('Login Response:', res);
-
-      // ✅ Handle API success properly
-      if (res?.status === 'Success' || res?.status === true) {
-
-        // Token already stored in service (tap)
-        this.toastr.success(res?.description || 'Login successful ✅');
-
-        // ✅ Navigate safely
-        // this.router.navigate(['/landing-page-list'], {
-        //   replaceUrl: true
-        // });
+        this.toastr.success(res?.description || 'Login successfully ✅');
         this.router.navigate(['/landing-page-list']);
 
       } else {

@@ -215,32 +215,41 @@ export class CreateLandingPage implements OnInit {
     });
   }
 
+titleErrorMsg: string = '';
+descriptionErrorMsg: string = '';
+
+validateTitle() {
+  const words = this.titleData.title.trim().split(/\s+/).filter(Boolean);
+
+  if (!this.titleData.title.trim()) {
+    this.titleErrors.title = true;
+    this.titleErrorMsg = 'This field is required';
+  } else if (words.length > 60) {
+    this.titleErrors.title = true;
+    this.titleErrorMsg = 'Title cannot exceed 60 words';
+  } else {
+    this.titleErrors.title = false;
+    this.titleErrorMsg = '';
+  }
+}
+
+validateDescription() {
+  const words = this.titleData.description.trim().split(/\s+/).filter(Boolean);
+
+  if (!this.titleData.description.trim()) {
+    this.titleErrors.description = true;
+    this.descriptionErrorMsg = 'This field is required';
+  } else if (words.length > 120) {
+    this.titleErrors.description = true;
+    this.descriptionErrorMsg = 'Description cannot exceed 120 words';
+  } else {
+    this.titleErrors.description = false;
+    this.descriptionErrorMsg = '';
+  }
+}
+
   gotEmptyFaq = false;
-  // loadFaqBySlug(slug: string): void {
-  //   this.landingService.getFAQBySlug(slug).subscribe({
-  //     next: (res: any) => {
-  //       const data = res?.data ?? [];
 
-  //       this.faqs = data
-  //         .flatMap((item: any) => item.faq || [])
-  //         .map((f: any) => ({
-  //           question: f.title ?? '',
-  //           answer: f.description ?? '',
-  //         }));
-
-  //       if (!this.faqs.length) {
-  //         this.gotEmptyFaq = true;
-  //         this.faqs = [{ question: '', answer: '' }];
-  //       }
-
-  //       this.cd.detectChanges();
-  //     },
-
-  //     error: (err) => {
-  //       console.error('FAQ API Error:', err);
-  //     },
-  //   });
-  // }
 loadFaqBySlug(slug: string): void {
   this.landingService.getFAQBySlug(slug).subscribe({
     next: (res: any) => {
@@ -275,6 +284,25 @@ loadFaqBySlug(slug: string): void {
 
   onHeroImage(event: any) {
     const file = event.target.files[0];
+     const allowedTypes = [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/webp',
+  ];
+    if (!allowedTypes.includes(file.type)) {
+    this.toastr.error('Only image files are allowed (PNG, JPG, WEBP, SVG)');
+    event.target.value = '';
+    this.heroData.image = null;
+    return;
+  }
+      const maxSize = 2 * 1024 * 1024;
+      if (file.size > maxSize) {
+    this.toastr.error('Image size should be less than 2MB');
+    event.target.value = '';
+    this.heroData.image = null;
+    return;
+  }
     if (file) {
       this.heroData.image = file;
 
@@ -321,6 +349,7 @@ loadFaqBySlug(slug: string): void {
 
   addFaq() {
     this.faqs.push({ question: '', answer: '' });
+    console.log("click")
   }
 
   removeFaq(index: number) {
@@ -414,11 +443,20 @@ loadFaqBySlug(slug: string): void {
     let isValid = true;
 
     if (section === 'title') {
-      this.titleErrors.title = !this.titleData.title?.trim();
-      this.titleErrors.description = !this.titleData.description?.trim();
-      this.titleErrors.slug = !this.titleData.slug?.trim();
+      // this.titleErrors.title = !this.titleData.title?.trim();
+      // this.titleErrors.description = !this.titleData.description?.trim();
+      // this.titleErrors.slug = !this.titleData.slug?.trim();
 
-      isValid = !Object.values(this.titleErrors).includes(true);
+      // isValid = !Object.values(this.titleErrors).includes(true);
+      this.validateTitle();
+this.validateDescription();
+
+this.titleErrors.slug = !this.titleData.slug?.trim();
+
+isValid =
+  !this.titleErrors.title &&
+  !this.titleErrors.description &&
+  !this.titleErrors.slug;
     }
 
     if (section === 'hero') {
@@ -552,7 +590,8 @@ loadFaqBySlug(slug: string): void {
           this.toastr.error('Failed to update page');
         },
       });
-    } else {
+    } 
+    else {
       this.landingService.addLandingPage(payload).subscribe({
         next: (res: any) => {
        
@@ -565,6 +604,9 @@ loadFaqBySlug(slug: string): void {
           } else {
             // Any failure
             this.toastr.error(res.description || 'Failed to save page');
+             if (res.description?.toLowerCase().includes('slug already exists')) {
+        this.activeSection = 'title';
+      }
           }
         },
 
@@ -607,18 +649,38 @@ handleSectionClick(section: string) {
     });
   }
 
-  // ===============================
-  // All-in-One Image Selection
-  // ===============================
-
 
   onAllInOneImage(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
+    
     if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
     const card = this.allInOneCards[index];
+const allowedTypes = [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/webp',
+  ];
 
+  const maxSize = 2 * 1024 * 1024; // 2MB
+
+  // ❌ TYPE VALIDATION
+  if (!allowedTypes.includes(file.type)) {
+    this.toastr.error('Only image files are allowed (PNG, JPG, WEBP, SVG)');
+    input.value = '';
+    card.image = null;
+    return;
+  }
+
+  // ❌ SIZE VALIDATION
+  if (file.size > maxSize) {
+    this.toastr.error('Image size should be less than 2MB');
+    input.value = '';
+    card.image = null;
+    return;
+  }
     // Store file for upload
     card.image = file;
 
@@ -679,10 +741,10 @@ handleSectionClick(section: string) {
 saveFaq(mode: string) {
   const validFaqs = this.faqs.filter(f => f.question && f.answer);
 
-  if (validFaqs.length === 0) {
-    console.warn('No valid FAQs to save');
-    return;
-  }
+  // if (validFaqs.length === 0) {
+  //    this.toastr.error('No valid FAQs to update');
+  //   return;
+  // }
 
   // 👉 If first time (empty from API)
   if (this.gotEmptyFaq) {
@@ -698,7 +760,7 @@ saveFaq(mode: string) {
     const validFaqs = this.faqs.filter((f) => f.question && f.answer);
 
     if (validFaqs.length === 0) {
-      console.warn('No valid FAQs to save');
+      this.toastr.error('No valid FAQs to Save');
       return;
     }
 
@@ -714,6 +776,7 @@ saveFaq(mode: string) {
       next: (res) => {
         this.gotEmptyFaq = false; // FAQs ab empty nahi hain
         this.toastr.success('FAQs saved successfully ✅');
+         this.router.navigate(['/landing-page-list']);
       },
       error: (err) => this.toastr.error('Failed to save FAQs ❌'),
     });
@@ -724,7 +787,7 @@ saveFaq(mode: string) {
     const validFaqs = this.faqs.filter((f) => f.question && f.answer);
 
     if (validFaqs.length === 0) {
-      console.warn('No valid FAQs to update');
+      this.toastr.error('No valid FAQs to Update');
       return;
     }
 
@@ -738,7 +801,10 @@ saveFaq(mode: string) {
 
     // Call update API instead of add API
     this.landingService.updateFAQ(payload).subscribe({
-      next: (res) => this.toastr.success('FAQs updated successfully ✅'),
+      next: (res) => {
+        this.toastr.success('FAQs updated successfully ✅');
+         this.router.navigate(['/landing-page-list']);
+      },
       error: (err) => this.toastr.error('Failed to update FAQs ❌'),
     });
   }
