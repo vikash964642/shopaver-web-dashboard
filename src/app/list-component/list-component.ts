@@ -46,7 +46,7 @@ export class ListComponent implements OnInit {
 
   // ✅ ADD THIS METHOD
   openForEdit(slug: string) {
-    // console.log('Redirecting with slug:', slug);
+    
     this.router.navigate(['/create-landing-page', slug]);
   }
 

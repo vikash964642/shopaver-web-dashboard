@@ -349,7 +349,7 @@ loadFaqBySlug(slug: string): void {
 
   addFaq() {
     this.faqs.push({ question: '', answer: '' });
-    console.log("click")
+    
   }
 
   removeFaq(index: number) {
