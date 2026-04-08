@@ -100,10 +100,31 @@ loadPageCards(page: number = 1, pageSize: number = 10, search: string = ''): voi
     });
   }
 
-  deletePage(slug: string) {
-    const confirmDelete = confirm('Are you sure you want to delete this page?');
+ showDeleteModal = false;
+selectedSlug: string | null = null;
 
-    if (!confirmDelete) return;
+openDeleteModal(slug: string) {
+  if (!slug) return;
+  this.selectedSlug = slug;
+  this.showDeleteModal = true;
+   document.body.style.overflow = 'hidden';
+  this.cdr.detectChanges();
+}
+
+confirmDelete() {
+  if (this.selectedSlug) {
+    this.deletePage(this.selectedSlug);
+  }
+  this.cancelDelete();
+}
+
+cancelDelete() {
+  this.showDeleteModal = false;
+  this.selectedSlug = null;
+   this.cdr.detectChanges();
+}
+  deletePage(slug: string) {
+   
 
     this.landingService.deleteLandingPage(slug).subscribe({
       next: () => {

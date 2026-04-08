@@ -39,7 +39,7 @@
             class="fa fa-trash delete-icon"
             title="Delete"
             style="height: 22px; width: 22px"
-            (click)="card.slug && deletePage(card.slug)"
+            (click)="openDeleteModal(card.slug); $event.stopPropagation()"
           ></i>
         </div>
 
@@ -53,6 +53,20 @@
       </div>
 
       <!-- <p *ngIf="pageCards.length === 0">No pages available</p> -->
+    </div>
+  </div>
+</div>
+
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-backdrop" *ngIf="showDeleteModal">
+  <div class="modal">
+    <p>Are you sure you want to delete this page {{ selectedSlug }} ?</p>
+
+    <div class="modal-actions">
+       <button class="no-btn" (click)="cancelDelete()">No</button>
+      <button class="yes-btn" (click)="confirmDelete()">Yes</button>
+     
     </div>
   </div>
 </div>
