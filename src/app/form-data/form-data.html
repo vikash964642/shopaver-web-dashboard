@@ -12,11 +12,14 @@
         <span class="arrow">›</span>
       </div>
 
-      <div class="sidebar-item">
+      <div class="sidebar-item" [ngClass]="{ 'active': isActiveRoute('/landing-page-data') }">
         <span>Form Data</span>
         <span class="arrow">›</span>
       </div>
-  
+    <div class="sidebar-item" (click)="goTo('deleted-page-list')">
+        <span>Deleted Slugs</span>
+        <span class="arrow">›</span>
+      </div>
     </div>
        <div class="logoutbtn">
        <button (click)="logout()">Logout</button>

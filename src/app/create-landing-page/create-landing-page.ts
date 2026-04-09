@@ -104,7 +104,7 @@ export class CreateLandingPage implements OnInit {
       return;
     }
 
-    const payload = { search: slug, page: '1', pageSize: '10' };
+    const payload = { search: slug, page: '1', pageSize: '1000' };
 
     this.landingService.getSlugList(payload).subscribe({
       next: (res: any) => {
@@ -152,6 +152,7 @@ export class CreateLandingPage implements OnInit {
        
 
         const data = res?.data || {};
+       
 
         // ================= TITLE SECTION =================
         this.titleData = {
@@ -808,4 +809,5 @@ saveFaq(mode: string) {
       error: (err) => this.toastr.error('Failed to update FAQs ❌'),
     });
   }
+
 }

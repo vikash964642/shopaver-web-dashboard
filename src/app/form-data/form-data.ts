@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LandingService } from '../landing.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-form-data',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, HttpClientModule],
+   imports: [CommonModule, RouterModule,FormsModule,NgFor, NgIf, HttpClientModule],
   templateUrl: './form-data.html',
   styleUrls: ['./form-data.scss'],
 })
@@ -23,7 +23,9 @@ export class FormData implements OnInit, OnDestroy {
     private landingService: LandingService,
     private toastr: ToastrService,
   ) {}
-
+isActiveRoute(route: string): boolean {
+  return this.router.url === route;
+}
   // =========================
   // STATE
   // =========================

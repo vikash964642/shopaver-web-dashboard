@@ -6,9 +6,11 @@
 .container-sec{
   display: flex;
   height: 97vh;
+  overflow: hidden;
 }
 .commerce-sidebar {
   width: 218px;
+    position: fixed; 
   height: 100%;
   background: #ffffff;
   border-right: 1px solid #e6e6e6;
@@ -45,7 +47,6 @@ flex-direction: column;
 }
 .sidebar-main-container {
   margin-top: 10px;
-    flex: 1;
     display: flex;
     flex-direction: column;
   .sidebar-item {
@@ -69,22 +70,31 @@ flex-direction: column;
     }
   }
 
-  .sidebar-item:hover {
-    background: #f5f0ff;
-  }
+  // .sidebar-item:hover {
+  //   background: #f5f0ff;
+  // }
 
-  .sidebar-item.active {
-    color: #6a00ff;
-    font-weight: 600;
-    background: #faf7ff;
+  // .sidebar-item.active {
+  //   color: #6a00ff;
+  //   font-weight: 600;
+  //   background: #faf7ff;
 
-    .arrow {
-      transform: rotate(90deg);
-    }
-  }
+  //   .arrow {
+  //     transform: rotate(90deg);
+  //   }
+  // }
+   .sidebar-item:hover,
+.sidebar-item.active {
+  background: #f5f0ff;
+  color: #5801b7;
+  
+}
+.sidebar-item.active .arrow {
+  transform: rotate(90deg);
+}
 }
 .logoutbtn{
-  position: absolute;
+  position: fixed;
   bottom: 30px;
   padding-left: 16px;
   button{
@@ -102,9 +112,9 @@ flex-direction: column;
 .main-container {
   padding: 25px;
   background: linear-gradient(135deg, #eef2ff, #f9faff);
-  min-height: 97vh;
+  height: 97vh;
   width: 100%;
-
+ margin-left: 218px;
   .head {
     display: flex;
     justify-content: space-between;

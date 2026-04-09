@@ -27,14 +27,22 @@ export class LandingService {
     return this.http.post(`${this.baseUrl}/GetLandingPageBySlug?slug=${slug}`,{});
   }
 
-  deleteLandingPage(slug: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/DeleteLandingPage?slug=${slug}`, {});
+  // deleteLandingPage(slug: string): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/DeleteLandingPage?slug=${slug}`, {});
+  // }
+deleteLandingPage(slug: string,IsActive:boolean): Observable<any> {
+    return this.http.post(`${this.baseUrl}/DeleteOrRetrieve-LandingPage?slug=${slug}&IsActive=${IsActive}`, {});
   }
-
 
 getSlugList(payload: { search: string; page: string; pageSize: string }) {
   return this.http.post(
     `${this.baseUrl}/GetSlugList`,
+    payload
+  );
+}
+getAllDeletedSlugs(payload: { search: string; page: string; pageSize: string }) {
+  return this.http.post(
+    `${this.baseUrl}/GetAllDeletedSlugs`,
     payload
   );
 }
@@ -80,13 +88,7 @@ getSlugList(payload: { search: string; page: string; pageSize: string }) {
     return this.http.post(`${this.baseUrl}/GetALLFAQbySlug?slug=${slug}`, {});
   }
 
-  // deleteFAQ(id: number) {
-  //   return this.http.delete(`${this.baseUrl}/DeleteFAQ?id=${id}`);
-  // }
 
-  // =============================
-  //All Slug Data
-  // =============================
 
   getAllSlugData(payload: any) {
     return this.http.post(`${this.baseUrl}/GetScheduleBySlug`, payload );

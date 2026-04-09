@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
 }
-  body {
+ body {
   margin: 0;
   overflow: hidden; // 🔥 pura page scroll disable
 }
@@ -52,7 +52,7 @@
  .container-sec{
   display: flex;
   min-height: 97vh;
-    overflow: hidden;
+  overflow: hidden;
  }
  
 .sidebar-main-container {
@@ -77,23 +77,11 @@
       font-size: 22px;
       color: inherit;
       display: inline-block;
-      transition: transform 0.25s ease;
+      transition: transform 0.3s ease;
     }
   }
  
-  // .sidebar-item:hover {
-  //   background: #f5f0ff;
-  // }
- 
-  // .sidebar-item.active {
-  //   color: #6a00ff;
-  //   font-weight: 600;
-  //   background: #faf7ff;
- 
-  //   .arrow {
-  //     transform: rotate(90deg);
-  //   }
-  // }
+
  .sidebar-item:hover,
 .sidebar-item.active {
   background: #f5f0ff;
@@ -104,7 +92,6 @@
   transform: rotate(90deg);
 }
  
-
 }
 .logoutbtn{
   position: fixed;
@@ -123,12 +110,14 @@
   }
 }
 .main-container {
- width: 100%;
+width: 100%;
   padding: 25px;
   background: #f4f6fb;
+//   min-height: 97vh;
+ margin-left: 218px;   // 🔥 sidebar ki width jitna
   height: 97vh;
-  overflow-y: auto;
-   margin-left: 218px; 
+  overflow-y: auto; 
+
 }
 
 .content-wrapper {

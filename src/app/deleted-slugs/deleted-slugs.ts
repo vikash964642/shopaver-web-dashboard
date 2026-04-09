@@ -12,14 +12,14 @@ interface PageCard {
 }
 
 @Component({
-  selector: 'app-list-component',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './list-component.html',
-  styleUrls: ['./list-component.scss'],
+  selector: 'app-deleted-slugs',
+ imports: [CommonModule, RouterModule],
+    standalone: true,
+  templateUrl: './deleted-slugs.html',
+  styleUrl: './deleted-slugs.scss',
 })
-export class ListComponent implements OnInit {
- pageCards: PageCard[] = [];
+export class DeletedSlugs {
+  pageCards: PageCard[] = [];
   isLoading: boolean = false;
   errorMsg: string = '';
 
@@ -55,7 +55,7 @@ isActiveRoute(route: string): boolean {
  
 
 
-loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): void {
+loadPageCards(page: number = 1, pageSize: number = 1000, search: string = ''): void {
     this.isLoading = true;
     this.errorMsg = '';
 
@@ -65,12 +65,11 @@ loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): vo
       pageSize: pageSize.toString(),
     };
 
-    this.landingService.getSlugList(payload).subscribe({
+    this.landingService.getAllDeletedSlugs(payload).subscribe({
       next: (res: any) => {
         const baseUrl = 'https://media-shopaver-uat.s3.amazonaws.com';
 
         if (res?.data && Array.isArray(res.data)) {
-          console.log(res.data)
           this.pageCards = res.data.map((item: any) => {
             const slugData = Array.isArray(item.slugListData) ? item.slugListData[0] : {};
             return {
@@ -116,7 +115,7 @@ openDeleteModal(slug: string) {
 
 confirmDelete() {
   if (this.selectedSlug) {
-    this.deletePage(this.selectedSlug);
+    this.retrivePage(this.selectedSlug);
   }
   this.cancelDelete();
 }
@@ -124,6 +123,7 @@ confirmDelete() {
 cancelDelete() {
   this.showDeleteModal = false;
   this.selectedSlug = null;
+  document.body.style.overflow = 'auto';
    this.cdr.detectChanges();
 }
 //   deletePage(slug: string) {
@@ -144,11 +144,11 @@ cancelDelete() {
 //     });
 //   }
 
-deletePage(slug: string) {
-  this.landingService.deleteLandingPage(slug, false).subscribe({
+retrivePage(slug: string) {
+  this.landingService.deleteLandingPage(slug, true).subscribe({
     next: () => {
-      this.toastr.success('Page deleted successfully ✅');
-
+      this.toastr.success('Page retrieve successfully ✅');
+this.loadPageCards();
       this.pageCards = this.pageCards.filter(
         (page) => page.slug !== slug
       );
@@ -158,4 +158,5 @@ deletePage(slug: string) {
     },
   });
 }
+
 }

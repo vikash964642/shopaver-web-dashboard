@@ -23,6 +23,13 @@ export const routes: Routes = [
         .then(m => m.ListComponent),
          canActivate: [AuthGuard],
   },
+   {
+    path: 'deleted-page-list',
+    loadComponent: () =>
+      import('./deleted-slugs/deleted-slugs')
+        .then(m => m.DeletedSlugs),
+         canActivate: [AuthGuard],
+  },
   {
     path: 'landing-page-data',
     loadComponent: () =>
