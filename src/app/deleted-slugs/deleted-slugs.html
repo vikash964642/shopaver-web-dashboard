@@ -6,8 +6,8 @@
       </div>
     </div>
 
-    <div class="sidebar-main-container">
-      <div class="sidebar-item" [ngClass]="{ 'active': isActiveRoute('/landing-page-list') }">
+    <div class="sidebar-main-container" (click)="goTo('landing-page-list')">
+      <div class="sidebar-item" >
         <span>Landing page list</span>
         <span class="arrow">›</span>
       </div>
@@ -16,7 +16,7 @@
         <span>Form Data</span>
         <span class="arrow">›</span>
       </div>
-          <div class="sidebar-item"  (click)="goTo('deleted-page-list')">
+          <div class="sidebar-item" [ngClass]="{ 'active': isActiveRoute('/deleted-page-list') }">
         <span>Deleted Slugs</span>
         <span class="arrow">›</span>
       </div>
@@ -26,21 +26,14 @@
     </div>
   </div>
   <div class="main-container">
-    <div class="head">
-      <p>List of landing Page</p>
-      <button routerLink="/create-landing-page">Create New</button>
-    </div>
-
+    
+<div class="head">
+    <button class="save" [routerLink]="['/landing-page-list']">Back</button>
+</div>
     <div class="content-wrapper">
       <div class="page-card" *ngFor="let card of pageCards">
         <div class="card-actions">
-       
-          <i
-            class="fa fa-trash delete-icon"
-            title="Delete"
-            style="height: 22px; width: 22px"
-            (click)="openDeleteModal(card.slug); $event.stopPropagation()"
-          ></i>
+          <i class="fa-solid fa-download download-icon" (click)="openRetrieveModal(card.slug); $event.stopPropagation()"></i>
         </div>
 
         <h3 style="margin-top: 15px">{{ card.slug }}</h3>
@@ -48,24 +41,24 @@
 
         <div class="preview">
           <img [src]="card.preview_image" [alt]="card.title || 'Preview Image'" />
-          <a class="open-btn" (click)="card.slug && openForEdit(card.slug)"> Open Page </a>
+        
         </div>
       </div>
 
-      <!-- <p *ngIf="pageCards.length === 0">No pages available</p> -->
+      <h1 *ngIf="pageCards.length === 0">No pages available</h1>
     </div>
   </div>
 </div>
 
 
 <!-- DELETE CONFIRM MODAL -->
-<div class="modal-backdrop" *ngIf="showDeleteModal">
+<div class="modal-backdrop" *ngIf="showRetrieveModal">
   <div class="modal">
-    <p>Are you sure you want to delete this page {{ selectedSlug }} ?</p>
+    <p>Are you sure you want to Retrieve this page {{ selectedSlug }} ?</p>
 
     <div class="modal-actions">
-       <button class="no-btn" (click)="cancelDelete()">No</button>
-      <button class="yes-btn" (click)="confirmDelete()">Yes</button>
+       <button class="no-btn" (click)="cancelRetrieve()">No</button>
+      <button class="yes-btn" (click)="confirmRetrieve()">Yes</button>
      
     </div>
   </div>

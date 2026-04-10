@@ -104,7 +104,7 @@ export class CreateLandingPage implements OnInit {
       return;
     }
 
-    const payload = { search: slug, page: '1', pageSize: '10' };
+    const payload = { search: slug, page: '1', pageSize: '1000' };
 
     this.landingService.getSlugList(payload).subscribe({
       next: (res: any) => {
@@ -152,6 +152,7 @@ export class CreateLandingPage implements OnInit {
        
 
         const data = res?.data || {};
+       
 
         // ================= TITLE SECTION =================
         this.titleData = {
@@ -349,7 +350,7 @@ loadFaqBySlug(slug: string): void {
 
   addFaq() {
     this.faqs.push({ question: '', answer: '' });
-    console.log("click")
+    
   }
 
   removeFaq(index: number) {
@@ -443,11 +444,7 @@ loadFaqBySlug(slug: string): void {
     let isValid = true;
 
     if (section === 'title') {
-      // this.titleErrors.title = !this.titleData.title?.trim();
-      // this.titleErrors.description = !this.titleData.description?.trim();
-      // this.titleErrors.slug = !this.titleData.slug?.trim();
-
-      // isValid = !Object.values(this.titleErrors).includes(true);
+      
       this.validateTitle();
 this.validateDescription();
 
@@ -729,24 +726,11 @@ const allowedTypes = [
       error: (err) => this.toastr.error('Failed to upload image ❌'),
     });
   }
-  // saveFaq(mode: string) {
-   
-  //   if (this.gotEmptyFaq) {
-  //     this.addFaqs();
-  //   } else {
-  //     this.updateFaq();
-  //   }
-  // }
+  
   
 saveFaq(mode: string) {
   const validFaqs = this.faqs.filter(f => f.question && f.answer);
 
-  // if (validFaqs.length === 0) {
-  //    this.toastr.error('No valid FAQs to update');
-  //   return;
-  // }
-
-  // 👉 If first time (empty from API)
   if (this.gotEmptyFaq) {
     this.addFaqs();
     return;
@@ -808,4 +792,5 @@ saveFaq(mode: string) {
       error: (err) => this.toastr.error('Failed to update FAQs ❌'),
     });
   }
+
 }

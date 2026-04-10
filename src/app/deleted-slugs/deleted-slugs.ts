@@ -12,14 +12,14 @@ interface PageCard {
 }
 
 @Component({
-  selector: 'app-list-component',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './list-component.html',
-  styleUrls: ['./list-component.scss'],
+  selector: 'app-deleted-slugs',
+ imports: [CommonModule, RouterModule],
+    standalone: true,
+  templateUrl: './deleted-slugs.html',
+  styleUrl: './deleted-slugs.scss',
 })
-export class ListComponent implements OnInit {
- pageCards: PageCard[] = [];
+export class DeletedSlugs {
+  pageCards: PageCard[] = [];
   isLoading: boolean = false;
   errorMsg: string = '';
 
@@ -46,16 +46,12 @@ isActiveRoute(route: string): boolean {
     this.loadPageCards();
   }
 
-  // ✅ ADD THIS METHOD
-  openForEdit(slug: string) {
-    
-    this.router.navigate(['/create-landing-page', slug]);
-  }
+ 
 
  
 
 
-loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): void {
+loadPageCards(page: number = 1, pageSize: number = 1000, search: string = ''): void {
     this.isLoading = true;
     this.errorMsg = '';
 
@@ -65,12 +61,11 @@ loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): vo
       pageSize: pageSize.toString(),
     };
 
-    this.landingService.getSlugList(payload).subscribe({
+    this.landingService.getAllDeletedSlugs(payload).subscribe({
       next: (res: any) => {
         const baseUrl = 'https://media-shopaver-uat.s3.amazonaws.com';
 
         if (res?.data && Array.isArray(res.data)) {
-          console.log(res.data)
           this.pageCards = res.data.map((item: any) => {
             const slugData = Array.isArray(item.slugListData) ? item.slugListData[0] : {};
             return {
@@ -103,52 +98,37 @@ loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): vo
     });
   }
 
- showDeleteModal = false;
+ showRetrieveModal = false;
 selectedSlug: string | null = null;
 
-openDeleteModal(slug: string) {
+openRetrieveModal(slug: string) {
   if (!slug) return;
   this.selectedSlug = slug;
-  this.showDeleteModal = true;
+  this.showRetrieveModal = true;
    document.body.style.overflow = 'hidden';
   this.cdr.detectChanges();
 }
 
-confirmDelete() {
+confirmRetrieve() {
   if (this.selectedSlug) {
-    this.deletePage(this.selectedSlug);
+    this.retrivePage(this.selectedSlug);
   }
-  this.cancelDelete();
+  this.cancelRetrieve();
 }
 
-cancelDelete() {
-  this.showDeleteModal = false;
+cancelRetrieve() {
+  this.showRetrieveModal = false;
   this.selectedSlug = null;
+  document.body.style.overflow = 'auto';
    this.cdr.detectChanges();
 }
-//   deletePage(slug: string) {
-   
 
-//     this.landingService.deleteLandingPage(slug).subscribe({
-//       next: () => {
-//         // console.log('Page Deleted');
-// this.toastr.success('Page deleted successfully ✅');
-//         this.pageCards = this.pageCards.filter((page) => page.slug !== slug);
-//         this.loadPageCards(); 
-//       },
 
-//       error: (err) => {
-//         // console.error('Delete Error', err);
-//         this.toastr.error('Failed to delete page ❌');
-//       },
-//     });
-//   }
-
-deletePage(slug: string) {
-  this.landingService.deleteLandingPage(slug, false).subscribe({
+retrivePage(slug: string) {
+  this.landingService.deleteLandingPage(slug, true).subscribe({
     next: () => {
-      this.toastr.success('Page deleted successfully ✅');
-
+      this.toastr.success('Page retrieve successfully ✅');
+this.loadPageCards();
       this.pageCards = this.pageCards.filter(
         (page) => page.slug !== slug
       );
@@ -158,4 +138,5 @@ deletePage(slug: string) {
     },
   });
 }
+
 }
