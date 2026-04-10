@@ -46,11 +46,7 @@ isActiveRoute(route: string): boolean {
     this.loadPageCards();
   }
 
-  // ✅ ADD THIS METHOD
-  openForEdit(slug: string) {
-    
-    this.router.navigate(['/create-landing-page', slug]);
-  }
+ 
 
  
 
@@ -102,47 +98,31 @@ loadPageCards(page: number = 1, pageSize: number = 1000, search: string = ''): v
     });
   }
 
- showDeleteModal = false;
+ showRetrieveModal = false;
 selectedSlug: string | null = null;
 
-openDeleteModal(slug: string) {
+openRetrieveModal(slug: string) {
   if (!slug) return;
   this.selectedSlug = slug;
-  this.showDeleteModal = true;
+  this.showRetrieveModal = true;
    document.body.style.overflow = 'hidden';
   this.cdr.detectChanges();
 }
 
-confirmDelete() {
+confirmRetrieve() {
   if (this.selectedSlug) {
     this.retrivePage(this.selectedSlug);
   }
-  this.cancelDelete();
+  this.cancelRetrieve();
 }
 
-cancelDelete() {
-  this.showDeleteModal = false;
+cancelRetrieve() {
+  this.showRetrieveModal = false;
   this.selectedSlug = null;
   document.body.style.overflow = 'auto';
    this.cdr.detectChanges();
 }
-//   deletePage(slug: string) {
-   
 
-//     this.landingService.deleteLandingPage(slug).subscribe({
-//       next: () => {
-//         // console.log('Page Deleted');
-// this.toastr.success('Page deleted successfully ✅');
-//         this.pageCards = this.pageCards.filter((page) => page.slug !== slug);
-//         this.loadPageCards(); 
-//       },
-
-//       error: (err) => {
-//         // console.error('Delete Error', err);
-//         this.toastr.error('Failed to delete page ❌');
-//       },
-//     });
-//   }
 
 retrivePage(slug: string) {
   this.landingService.deleteLandingPage(slug, true).subscribe({

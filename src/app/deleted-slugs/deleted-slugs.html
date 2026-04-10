@@ -26,25 +26,14 @@
     </div>
   </div>
   <div class="main-container">
-    <div class="head">
-      <p>List of landing Page</p>
-      <button routerLink="/create-landing-page">Create New</button>
-    </div>
-
+    
+<div class="head">
+    <button class="save" [routerLink]="['/landing-page-list']">Back</button>
+</div>
     <div class="content-wrapper">
       <div class="page-card" *ngFor="let card of pageCards">
         <div class="card-actions">
-          <!-- <i
-        class="fa fa-edit edit-icon"
-        title="Edit"
-        (click)="card.slug && openForEdit(card.slug)"
-      ></i> -->
-          <i
-            class="fa fa-trash delete-icon"
-            title="Delete"
-            style="height: 22px; width: 22px"
-            (click)="openDeleteModal(card.slug); $event.stopPropagation()"
-          ></i>
+          <i class="fa-solid fa-download download-icon" (click)="openRetrieveModal(card.slug); $event.stopPropagation()"></i>
         </div>
 
         <h3 style="margin-top: 15px">{{ card.slug }}</h3>
@@ -52,7 +41,7 @@
 
         <div class="preview">
           <img [src]="card.preview_image" [alt]="card.title || 'Preview Image'" />
-          <a class="open-btn" (click)="card.slug && openForEdit(card.slug)"> Open Page </a>
+        
         </div>
       </div>
 
@@ -63,13 +52,13 @@
 
 
 <!-- DELETE CONFIRM MODAL -->
-<div class="modal-backdrop" *ngIf="showDeleteModal">
+<div class="modal-backdrop" *ngIf="showRetrieveModal">
   <div class="modal">
     <p>Are you sure you want to Retrieve this page {{ selectedSlug }} ?</p>
 
     <div class="modal-actions">
-       <button class="no-btn" (click)="cancelDelete()">No</button>
-      <button class="yes-btn" (click)="confirmDelete()">Yes</button>
+       <button class="no-btn" (click)="cancelRetrieve()">No</button>
+      <button class="yes-btn" (click)="confirmRetrieve()">Yes</button>
      
     </div>
   </div>
