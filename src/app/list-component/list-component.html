@@ -32,9 +32,20 @@
     </div>
 
     <div class="content-wrapper">
-      <div class="page-card" *ngFor="let card of pageCards">
+      <div *ngIf="isLoading" class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading pages...</p>
+      </div>
+
+      <div class="page-card" *ngFor="let card of pageCards" [class.is-hidden]="isLoading">
         <div class="card-actions">
-       
+          <i
+            class="fa fa-edit edit-icon"
+            title="Edit"
+            style="height: 22px; width: 22px"
+            (click)="card.slug && openForEdit(card.slug); $event.stopPropagation()"
+          ></i>
+
           <i
             class="fa fa-trash delete-icon"
             title="Delete"
@@ -43,16 +54,25 @@
           ></i>
         </div>
 
-        <h3 style="margin-top: 15px">{{ card.slug }}</h3>
-        <p>{{ card.title }}</p>
+        <h4 style="margin-top: 15px">{{ card.title }}</h4>
+        <p>{{ card.slug }}</p>
 
         <div class="preview">
           <img [src]="card.preview_image" [alt]="card.title || 'Preview Image'" />
-          <a class="open-btn" (click)="card.slug && openForEdit(card.slug)"> Open Page </a>
+          <a
+            class="open-btn"
+            [href]="card.slug ? getPageUrl(card.slug) : null"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open Page
+          </a>
         </div>
       </div>
 
-      <!-- <p *ngIf="pageCards.length === 0">No pages available</p> -->
+      <p *ngIf="!isLoading && pageCards.length === 0" class="empty-state">
+        {{ errorMsg || 'No pages available' }}
+      </p>
     </div>
   </div>
 </div>

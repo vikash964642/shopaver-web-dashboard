@@ -174,7 +174,8 @@ textarea {
   }
 }
 input.invalid,
-textarea.invalid {
+textarea.invalid,
+.html-editor.invalid {
   border: 1px solid red;
 }
 
@@ -186,6 +187,120 @@ textarea.invalid {
 textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+.html-editor {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  transition: 0.2s ease;
+
+  &:focus-within {
+    border-color: #5801b7;
+    box-shadow: 0 0 0 3px rgba(88, 1, 183, 0.15);
+  }
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  padding: 6px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+
+  button {
+    min-width: 30px;
+    height: 30px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #374151;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+
+    &:hover {
+      border-color: #5801b7;
+      color: #5801b7;
+    }
+
+    &.active {
+      border-color: #5801b7;
+      background: #5801b7;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(88, 1, 183, 0.2);
+    }
+  }
+}
+
+.editor-area {
+  min-height: 120px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #111827;
+  outline: none;
+  display: block;
+  direction: ltr;
+  unicode-bidi: normal;
+  text-align: left;
+
+  &:empty::before {
+    content: attr(data-placeholder);
+    color: #9ca3af;
+    pointer-events: none;
+  }
+
+  &:empty:not([data-empty])::before {
+    content: attr(data-initial-html);
+    color: #111827;
+  }
+
+  ul,
+  ol {
+    display: block;
+    margin: 8px 0;
+    padding-left: 22px;
+  }
+
+  li {
+    display: list-item;
+    margin: 4px 0;
+  }
+}
+
+.all-in-one-card {
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.all-in-one-card:first-child {
+  padding-top: 0;
+}
+
+.all-in-one-card:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.card-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  height: 28px;
+  margin-bottom: 12px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #f3e8ff;
+  color: #5801b7;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 /* Buttons */

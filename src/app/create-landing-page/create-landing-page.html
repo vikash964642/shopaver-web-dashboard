@@ -8,31 +8,31 @@
     </div>
 
     <div class="sidebar-main-container">
-      <div class="sidebar-item" [class.active]="activeSection === 'title'" [class.disabled]="mode === 'create'"
+      <div class="sidebar-item" [class.active]="activeSection === 'title'" [class.disabled]="isSectionDisabled('title')"
         (click)="handleSectionClick('title')">
         <span>Title & Desc. Info</span>
         <span class="arrow">›</span>
       </div>
 
-      <div class="sidebar-item" [class.active]="activeSection === 'hero'" [class.disabled]="mode === 'create'"
+      <div class="sidebar-item" [class.active]="activeSection === 'hero'" [class.disabled]="isSectionDisabled('hero')"
         (click)="handleSectionClick('hero')">
         <span>Hero Section</span>
         <span class="arrow">›</span>
       </div>
 
-      <div class="sidebar-item" [class.active]="activeSection === 'all'" [class.disabled]="mode === 'create'"
+      <div class="sidebar-item" [class.active]="activeSection === 'all'" [class.disabled]="isSectionDisabled('all')"
         (click)="handleSectionClick('all')">
         <span>All in one Section</span>
         <span class="arrow">›</span>
       </div>
 
-      <div class="sidebar-item" [class.active]="activeSection === 'why'" [class.disabled]="mode === 'create'"
+      <div class="sidebar-item" [class.active]="activeSection === 'why'" [class.disabled]="isSectionDisabled('why')"
        (click)="handleSectionClick('why')">
         <span>Why choose us Section</span>
         <span class="arrow">›</span>
       </div>
 
-      <div class="sidebar-item" [class.active]="activeSection === 'faq'" [class.disabled]="mode === 'create'"
+      <div class="sidebar-item" [class.active]="activeSection === 'faq'" [class.disabled]="isSectionDisabled('faq')"
         (click)="handleSectionClick('faq')">
         <span>Faq Section</span>
         <span class="arrow">›</span>
@@ -105,14 +105,32 @@
         <div>
           <label>Keyword</label>
           <input type="text" name="heroKeyword" [(ngModel)]="heroData.keyword" (input)="heroErrors.keyword = false"
-            [class.invalid]="heroErrors.keyword" , />
+            [class.invalid]="heroErrors.keyword" />
           <div class="error" *ngIf="heroErrors.keyword">This field is required</div>
         </div>
 
         <div>
           <label>Paragraph</label>
-          <input type="text" name="heroParagraph" [(ngModel)]="heroData.paragraph"
-            (input)="heroErrors.paragraph = false" [class.invalid]="heroErrors.paragraph" , />
+          <div class="html-editor" [class.invalid]="heroErrors.paragraph">
+            <div class="editor-toolbar" (mousedown)="$event.preventDefault()">
+              <button type="button" [class.active]="isEditorCommandActive('bold')" (click)="formatEditor('bold')">B</button>
+              <button type="button" [class.active]="isEditorCommandActive('italic')" (click)="formatEditor('italic')">I</button>
+              <button type="button" [class.active]="isEditorCommandActive('underline')" (click)="formatEditor('underline')">U</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertUnorderedList')" (click)="formatEditor('insertUnorderedList')">•</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertOrderedList')" (click)="formatEditor('insertOrderedList')">1.</button>
+            </div>
+            <div
+              class="editor-area"
+              contenteditable="true"
+              data-placeholder="Enter paragraph"
+              [attr.data-initial-html]="heroData.paragraph"
+              [attr.data-empty]="heroData.paragraph ? null : ''"
+              (focus)="onEditorFocus($event, heroData.paragraph)"
+              (input)="updateHeroParagraph($event)"
+              (keyup)="updateEditorState()"
+              (mouseup)="updateEditorState()"
+            ></div>
+          </div>
           <div class="error" *ngIf="heroErrors.paragraph">This field is required</div>
         </div>
 
@@ -142,7 +160,7 @@
           </div>
 
           <div *ngIf="heroData.imagePath">
-            <img [src]="heroData.imagePath" [src]="isUploaded ? baseUrl + heroData.imagePath : heroData.imagePath"
+            <img [src]="getHeroImageUrl()"
               style="max-width: 200px; margin-top: 10px" />
           </div>
         </div>
@@ -158,17 +176,36 @@
 
       <!-- ALL IN ONE -->
       <div class="all-in-one-section" *ngIf="activeSection === 'all'">
-        <div *ngFor="let card of allInOneCards; let i = index">
+        <div class="all-in-one-card" *ngFor="let card of allInOneCards; let i = index">
+          <div class="card-number">Card {{ i + 1 }}</div>
           <input type="text" name="heading{{ i }}" [(ngModel)]="card.heading" placeholder="Heading"
-            (input)="allInOneErrors[i].heading = false" [class.invalid]="allInOneErrors[i]?.heading" , />
+            (input)="clearAllInOneError(i, 'heading')" [class.invalid]="allInOneErrors[i]?.heading" />
           <div class="error" *ngIf="allInOneErrors[i]?.heading">This field is required</div>
           <input type="text" name="subHeading{{ i }}" [(ngModel)]="card.subHeading" placeholder="Subheading"
-            (input)="allInOneErrors[i].subHeading = false" [class.invalid]="allInOneErrors[i]?.subHeading" , />
+            (input)="clearAllInOneError(i, 'subHeading')" [class.invalid]="allInOneErrors[i]?.subHeading" />
           <div class="error" *ngIf="allInOneErrors[i]?.subHeading">This field is required</div>
-          <input type="text" name="paragraph{{ i }}" [(ngModel)]="card.paragraph" placeholder="Paragraph"
-            (input)="allInOneErrors[i].paragraph = false" [class.invalid]="allInOneErrors[i]?.paragraph" , />
+          <div class="html-editor" [class.invalid]="allInOneErrors[i]?.paragraph">
+            <div class="editor-toolbar" (mousedown)="$event.preventDefault()">
+              <button type="button" [class.active]="isEditorCommandActive('bold')" (click)="formatEditor('bold')">B</button>
+              <button type="button" [class.active]="isEditorCommandActive('italic')" (click)="formatEditor('italic')">I</button>
+              <button type="button" [class.active]="isEditorCommandActive('underline')" (click)="formatEditor('underline')">U</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertUnorderedList')" (click)="formatEditor('insertUnorderedList')">•</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertOrderedList')" (click)="formatEditor('insertOrderedList')">1.</button>
+            </div>
+            <div
+              class="editor-area"
+              contenteditable="true"
+              data-placeholder="Enter paragraph"
+              [attr.data-initial-html]="card.paragraph"
+              [attr.data-empty]="card.paragraph ? null : ''"
+              (focus)="onEditorFocus($event, card.paragraph)"
+              (input)="updateAllInOneParagraph($event, i)"
+              (keyup)="updateEditorState()"
+              (mouseup)="updateEditorState()"
+            ></div>
+          </div>
           <div class="error" *ngIf="allInOneErrors[i]?.paragraph">This field is required</div>
-          <input type="file" accept="image/png, image/jpeg, image/webp" #allFileInput (change)="onAllInOneImage($event, i); allInOneErrors[i].image = false"
+          <input type="file" accept="image/png, image/jpeg, image/webp" #allFileInput (change)="onAllInOneImage($event, i)"
             [class.invalid]="allInOneErrors[i]?.image" style="display: none" />
           <div class="custom-file" (click)="allFileInput.click()">
             <span>
@@ -186,17 +223,8 @@
           <div class="error" *ngIf="allInOneErrors[i]?.image">{{ card.imageErrorMsg }}</div>
 
           <div *ngIf="card.imagePath">
-  <img 
-    [src]="
-      card.imagePath.startsWith('blob:')
-        ? card.imagePath
-        : card.imagePath.startsWith('http')
-        ? card.imagePath
-        : baseUrl + card.imagePath
-    "
-    style="max-width: 200px; margin-top: 10px" 
-  />
-</div>
+            <img [src]="getAllInOneImageUrl(card)" style="max-width: 200px; margin-top: 10px" />
+          </div>
           <div style="display: flex; flex-direction: row; gap: 10px">
             <button class="save" *ngIf="card.image" type="button" (click)="uploadAllInOneImage(i)">
               Upload Image
@@ -223,8 +251,26 @@
           <label>Heading 1</label>
           <input type="text" name="whyHeading1" [(ngModel)]="whyHeading1" placeholder="Enter heading for card 1" />
           <label>Paragraph 1</label>
-          <input type="text" name="whyParagraph1" [(ngModel)]="whyParagraph1"
-            placeholder="Enter paragraph for card 1" />
+          <div class="html-editor" [class.invalid]="whyErrors.paragraph1">
+            <div class="editor-toolbar" (mousedown)="$event.preventDefault()">
+              <button type="button" [class.active]="isEditorCommandActive('bold')" (click)="formatEditor('bold')">B</button>
+              <button type="button" [class.active]="isEditorCommandActive('italic')" (click)="formatEditor('italic')">I</button>
+              <button type="button" [class.active]="isEditorCommandActive('underline')" (click)="formatEditor('underline')">U</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertUnorderedList')" (click)="formatEditor('insertUnorderedList')">•</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertOrderedList')" (click)="formatEditor('insertOrderedList')">1.</button>
+            </div>
+            <div
+              class="editor-area"
+              contenteditable="true"
+              data-placeholder="Enter paragraph for card 1"
+              [attr.data-initial-html]="whyParagraph1"
+              [attr.data-empty]="whyParagraph1 ? null : ''"
+              (focus)="onEditorFocus($event, whyParagraph1)"
+              (input)="updateWhyParagraph($event, 1)"
+              (keyup)="updateEditorState()"
+              (mouseup)="updateEditorState()"
+            ></div>
+          </div>
         </div>
 
         <!-- Card 2 -->
@@ -232,8 +278,26 @@
           <label>Heading 2</label>
           <input type="text" name="whyHeading2" [(ngModel)]="whyHeading2" placeholder="Enter heading for card 2" />
           <label>Paragraph 2</label>
-          <input type="text" name="whyParagraph2" [(ngModel)]="whyParagraph2"
-            placeholder="Enter paragraph for card 2" />
+          <div class="html-editor" [class.invalid]="whyErrors.paragraph2">
+            <div class="editor-toolbar" (mousedown)="$event.preventDefault()">
+              <button type="button" [class.active]="isEditorCommandActive('bold')" (click)="formatEditor('bold')">B</button>
+              <button type="button" [class.active]="isEditorCommandActive('italic')" (click)="formatEditor('italic')">I</button>
+              <button type="button" [class.active]="isEditorCommandActive('underline')" (click)="formatEditor('underline')">U</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertUnorderedList')" (click)="formatEditor('insertUnorderedList')">•</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertOrderedList')" (click)="formatEditor('insertOrderedList')">1.</button>
+            </div>
+            <div
+              class="editor-area"
+              contenteditable="true"
+              data-placeholder="Enter paragraph for card 2"
+              [attr.data-initial-html]="whyParagraph2"
+              [attr.data-empty]="whyParagraph2 ? null : ''"
+              (focus)="onEditorFocus($event, whyParagraph2)"
+              (input)="updateWhyParagraph($event, 2)"
+              (keyup)="updateEditorState()"
+              (mouseup)="updateEditorState()"
+            ></div>
+          </div>
         </div>
 
         <!-- Card 3 -->
@@ -241,18 +305,64 @@
           <label>Heading 3</label>
           <input type="text" name="whyHeading3" [(ngModel)]="whyHeading3" placeholder="Enter heading for card 3" />
           <label>Paragraph 3</label>
-          <input type="text" name="whyParagraph3" [(ngModel)]="whyParagraph3"
-            placeholder="Enter paragraph for card 3" />
+          <div class="html-editor" [class.invalid]="whyErrors.paragraph3">
+            <div class="editor-toolbar" (mousedown)="$event.preventDefault()">
+              <button type="button" [class.active]="isEditorCommandActive('bold')" (click)="formatEditor('bold')">B</button>
+              <button type="button" [class.active]="isEditorCommandActive('italic')" (click)="formatEditor('italic')">I</button>
+              <button type="button" [class.active]="isEditorCommandActive('underline')" (click)="formatEditor('underline')">U</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertUnorderedList')" (click)="formatEditor('insertUnorderedList')">•</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertOrderedList')" (click)="formatEditor('insertOrderedList')">1.</button>
+            </div>
+            <div
+              class="editor-area"
+              contenteditable="true"
+              data-placeholder="Enter paragraph for card 3"
+              [attr.data-initial-html]="whyParagraph3"
+              [attr.data-empty]="whyParagraph3 ? null : ''"
+              (focus)="onEditorFocus($event, whyParagraph3)"
+              (input)="updateWhyParagraph($event, 3)"
+              (keyup)="updateEditorState()"
+              (mouseup)="updateEditorState()"
+            ></div>
+          </div>
         </div>
 
         <button class="save" type="button" (click)="prevSection('all')">Previous</button>
       </div>
       <!-- FAQ -->
       <div class="faq-section" *ngIf="activeSection === 'faq'">
-        <div *ngFor="let faq of faqs; let i = index">
-          <input type="text" name="question{{ i }}" [(ngModel)]="faq.question" placeholder="Question" />
+        <div *ngFor="let faq of faqs; let i = index; trackBy: trackFaqByIndex">
+          <input
+            type="text"
+            name="question{{ i }}"
+            [(ngModel)]="faq.question"
+            placeholder="Question"
+            [class.invalid]="faqErrors[i]?.question"
+            (input)="clearFaqError(i, 'question')"
+          />
+          <div class="error" *ngIf="faqErrors[i]?.question">This field is required</div>
 
-          <input type="text" name="answer{{ i }}" [(ngModel)]="faq.answer" placeholder="Answer" />
+          <div class="html-editor" [class.invalid]="faqErrors[i]?.answer">
+            <div class="editor-toolbar" (mousedown)="$event.preventDefault()">
+              <button type="button" [class.active]="isEditorCommandActive('bold')" (click)="formatEditor('bold')">B</button>
+              <button type="button" [class.active]="isEditorCommandActive('italic')" (click)="formatEditor('italic')">I</button>
+              <button type="button" [class.active]="isEditorCommandActive('underline')" (click)="formatEditor('underline')">U</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertUnorderedList')" (click)="formatEditor('insertUnorderedList')">•</button>
+              <button type="button" [class.active]="isEditorCommandActive('insertOrderedList')" (click)="formatEditor('insertOrderedList')">1.</button>
+            </div>
+            <div
+              class="editor-area"
+              contenteditable="true"
+              data-placeholder="Answer"
+              [attr.data-initial-html]="faq.answer"
+              [attr.data-empty]="faq.answer ? null : ''"
+              (focus)="onEditorFocus($event, faq.answer)"
+              (input)="updateFaqAnswer($event, i)"
+              (keyup)="updateEditorState()"
+              (mouseup)="updateEditorState()"
+            ></div>
+          </div>
+          <div class="error" *ngIf="faqErrors[i]?.answer">This field is required</div>
 
           <button class="save" type="button" *ngIf="faqs.length > 1" (click)="removeFaq(i)">
             Remove
@@ -266,8 +376,8 @@
 
           <!-- FINAL SAVE -->
           <!-- <button class="save" (click)="saveFaq(mode)" type="button">{{ mode }} faq</button> -->
-           <button class="save" (click)="saveFaq(mode)" type="button">
-  {{ gotEmptyFaq ? 'Save FAQ' : 'Update FAQ' }}
+           <button class="save" (click)="saveFaq()" type="button">
+  {{ shouldAddFaq ? 'Save FAQ' : 'Update FAQ' }}
 </button>
         </div>
       </div>

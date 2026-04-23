@@ -10,6 +10,9 @@ interface FAQ {
   answer: string;
 }
 
+type FaqErrorKey = 'question' | 'answer';
+type EditorCommand = 'bold' | 'italic' | 'underline' | 'insertUnorderedList' | 'insertOrderedList';
+
 interface AllInOneCard {
   heading: string;
   subHeading: string;
@@ -19,6 +22,8 @@ interface AllInOneCard {
   isUploaded?: boolean;
   imageErrorMsg?: string;
 }
+
+type AllInOneErrorKey = 'heading' | 'subHeading' | 'paragraph' | 'image';
 
 @Component({
   selector: 'app-create-landing-page',
@@ -33,6 +38,8 @@ export class CreateLandingPage implements OnInit {
   isUploaded: boolean = false;
 
   activeSection: string = 'title';
+  private sectionOrder = ['title', 'hero', 'all', 'why', 'faq'];
+  unlockedSectionIndex = 0;
 
   baseUrl = 'https://media-shopaver-uat.s3.amazonaws.com';
 
@@ -72,6 +79,15 @@ export class CreateLandingPage implements OnInit {
   ];
 
   faqs: FAQ[] = [{ question: '', answer: '' }];
+  faqErrors: { question: boolean; answer: boolean }[] = [{ question: false, answer: false }];
+  shouldAddFaq = true;
+  activeEditorCommands: Record<EditorCommand, boolean> = {
+    bold: false,
+    italic: false,
+    underline: false,
+    insertUnorderedList: false,
+    insertOrderedList: false,
+  };
 
   // ===============================
   // INIT
@@ -113,7 +129,7 @@ export class CreateLandingPage implements OnInit {
         // Allow same slug in edit mode
         if (this.mode === 'edit' && slug === this.slug) {
           this.slugError = '';
-          this.activeSection = 'hero';
+          this.goToSection('hero');
           return;
         }
 
@@ -122,7 +138,7 @@ export class CreateLandingPage implements OnInit {
           this.titleErrors.slug = true;
         } else {
           this.slugError = '';
-          this.activeSection = 'hero'; // Go to next section
+          this.goToSection('hero'); // Go to next section
         }
       },
       error: (err) => {
@@ -136,7 +152,7 @@ export class CreateLandingPage implements OnInit {
   // ===============================
 
   setActiveSection(section: string) {
-    this.activeSection = section;
+    this.goToSection(section);
   }
 
   titleValue = '';
@@ -179,9 +195,6 @@ export class CreateLandingPage implements OnInit {
         // ================= ALL IN ONE SECTION =================
 
         this.allInOneCards = (data?.allInOneSection || []).map((item: any) => {
-          if (this.allInOneCards.length > 0) {
-            this.isUploaded = true;
-          }
           const img = item?.image || '';
 
 
@@ -189,12 +202,21 @@ export class CreateLandingPage implements OnInit {
 
             heading: item?.heading || '',
             subHeading: item?.subHeading || '',
-            paragraph: item?.description || '',
+            paragraph: item?.description || item?.Description || '',
             image: null,
             imagePath: item?.image || '',
+            isUploaded: !!item?.image,
             imageName: img ? img.split('/').pop() : '',
           };
         });
+
+        if (this.allInOneCards.length === 0) {
+          this.allInOneCards = [
+            { heading: '', subHeading: '', paragraph: '', image: null as File | null, imagePath: '' },
+          ];
+        }
+
+        this.syncAllInOneErrors();
 
         // ================= WHY CHOOSE SECTION =================
         if (data?.chooseSection?.length) {
@@ -249,7 +271,7 @@ validateDescription() {
   }
 }
 
-  gotEmptyFaq = false;
+  gotEmptyFaq = true;
 
 loadFaqBySlug(slug: string): void {
   this.landingService.getFAQBySlug(slug).subscribe({
@@ -266,12 +288,15 @@ loadFaqBySlug(slug: string): void {
       // ✅ FIX: Proper flag handling
       if (mappedFaqs.length === 0) {
         this.gotEmptyFaq = true;
+        this.shouldAddFaq = true;
         this.faqs = [{ question: '', answer: '' }];
       } else {
         this.gotEmptyFaq = false;
+        this.shouldAddFaq = false;
         this.faqs = mappedFaqs;
       }
 
+      this.syncFaqErrors();
       this.cd.detectChanges();
     },
 
@@ -285,6 +310,7 @@ loadFaqBySlug(slug: string): void {
 
   onHeroImage(event: any) {
     const file = event.target.files[0];
+    if (!file) return;
      const allowedTypes = [
     'image/png',
     'image/jpeg',
@@ -338,10 +364,12 @@ loadFaqBySlug(slug: string): void {
       image: null,
       imagePath: '',
     });
+    this.allInOneErrors.push({ heading: false, subHeading: false, paragraph: false, image: false });
   }
 
   removeAllInOneCard(index: number) {
     this.allInOneCards.splice(index, 1);
+    this.allInOneErrors.splice(index, 1);
   }
 
   // ===============================
@@ -349,14 +377,134 @@ loadFaqBySlug(slug: string): void {
   // ===============================
 
   addFaq() {
-    this.faqs.push({ question: '', answer: '' });
-    
+    this.faqs = [...this.faqs, { question: '', answer: '' }];
+    this.faqErrors = [...this.faqErrors, { question: false, answer: false }];
+    this.cd.detectChanges();
   }
 
   removeFaq(index: number) {
     if (this.faqs.length > 1) {
-      this.faqs.splice(index, 1);
+      this.faqs = this.faqs.filter((_, faqIndex) => faqIndex !== index);
+      this.faqErrors = this.faqErrors.filter((_, faqIndex) => faqIndex !== index);
+      this.cd.detectChanges();
     }
+  }
+
+  trackFaqByIndex(index: number) {
+    return index;
+  }
+
+  private ensureFaqError(index: number) {
+    if (!this.faqErrors[index]) {
+      this.faqErrors[index] = { question: false, answer: false };
+    }
+  }
+
+  private syncFaqErrors() {
+    this.faqErrors = this.faqs.map((_, index) => {
+      return this.faqErrors[index] || { question: false, answer: false };
+    });
+  }
+
+  clearFaqError(index: number, field: FaqErrorKey) {
+    this.ensureFaqError(index);
+    this.faqErrors[index][field] = false;
+  }
+
+  formatEditor(command: EditorCommand) {
+    const selection = window.getSelection();
+    const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+
+    if (range) {
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+
+    document.execCommand(command, false);
+    this.updateEditorState();
+  }
+
+  updateEditorState() {
+    (Object.keys(this.activeEditorCommands) as EditorCommand[]).forEach((command) => {
+      this.activeEditorCommands[command] = document.queryCommandState(command);
+    });
+  }
+
+  isEditorCommandActive(command: EditorCommand): boolean {
+    return this.activeEditorCommands[command];
+  }
+
+  private getEditorHtml(event: Event): string {
+    return (event.target as HTMLElement).innerHTML;
+  }
+
+  initializeEditor(event: Event, value: string) {
+    const editor = event.target as HTMLElement;
+    if (editor.dataset['initialized'] === 'true') return;
+
+    editor.innerHTML = value || '';
+    editor.dataset['initialized'] = 'true';
+  }
+
+  onEditorFocus(event: Event, value: string) {
+    this.initializeEditor(event, value);
+    this.updateEditorState();
+  }
+
+  private getPlainTextFromHtml(value: string): string {
+    const element = document.createElement('div');
+    element.innerHTML = value || '';
+    return element.textContent?.replace(/\u00a0/g, ' ').trim() || '';
+  }
+
+  updateHeroParagraph(event: Event) {
+    this.heroData.paragraph = this.getEditorHtml(event);
+    this.heroErrors.paragraph = false;
+  }
+
+  updateAllInOneParagraph(event: Event, index: number) {
+    this.allInOneCards[index].paragraph = this.getEditorHtml(event);
+    this.clearAllInOneError(index, 'paragraph');
+  }
+
+  updateWhyParagraph(event: Event, cardNumber: 1 | 2 | 3) {
+    const value = this.getEditorHtml(event);
+
+    if (cardNumber === 1) {
+      this.whyParagraph1 = value;
+      this.whyErrors.paragraph1 = false;
+    } else if (cardNumber === 2) {
+      this.whyParagraph2 = value;
+      this.whyErrors.paragraph2 = false;
+    } else {
+      this.whyParagraph3 = value;
+      this.whyErrors.paragraph3 = false;
+    }
+  }
+
+  updateFaqAnswer(event: Event, index: number) {
+    this.faqs[index].answer = this.getEditorHtml(event);
+    this.clearFaqError(index, 'answer');
+  }
+
+  validateFaqs(): boolean {
+    this.syncFaqErrors();
+
+    let isValid = false;
+
+    this.faqs.forEach((faq, index) => {
+      const hasQuestion = !!faq.question?.trim();
+      const hasAnswer = !!this.getPlainTextFromHtml(faq.answer);
+
+      this.faqErrors[index].question = !hasQuestion;
+      this.faqErrors[index].answer = !hasAnswer;
+
+      if (hasQuestion && hasAnswer) {
+        isValid = true;
+      }
+    });
+
+    return isValid && !this.faqErrors.some((error) => error.question || error.answer);
   }
 
   // ===============================
@@ -424,6 +572,28 @@ loadFaqBySlug(slug: string): void {
     paragraph: boolean;
     image: boolean;
   }[] = [];
+
+  private ensureAllInOneError(index: number) {
+    if (!this.allInOneErrors[index]) {
+      this.allInOneErrors[index] = { heading: false, subHeading: false, paragraph: false, image: false };
+    }
+  }
+
+  private syncAllInOneErrors() {
+    this.allInOneErrors = this.allInOneCards.map((_, index) => {
+      return this.allInOneErrors[index] || {
+        heading: false,
+        subHeading: false,
+        paragraph: false,
+        image: false,
+      };
+    });
+  }
+
+  clearAllInOneError(index: number, field: AllInOneErrorKey) {
+    this.ensureAllInOneError(index);
+    this.allInOneErrors[index][field] = false;
+  }
   whyErrors = {
     heading1: false,
     paragraph1: false,
@@ -459,7 +629,7 @@ isValid =
     if (section === 'hero') {
       this.heroErrors.heading = !this.heroData.heading?.trim();
       this.heroErrors.keyword = !this.heroData.keyword?.trim();
-      this.heroErrors.paragraph = !this.heroData.paragraph?.trim();
+      this.heroErrors.paragraph = !this.getPlainTextFromHtml(this.heroData.paragraph);
       //  this.heroErrors.image = !this.heroData.image;
       // this.heroErrors.image = !(this.heroData.image || this.heroData.imagePath);
       if (!this.heroData.image && !this.heroData.imagePath) {
@@ -480,13 +650,11 @@ isValid =
 
     if (section === 'all') {
       this.allInOneCards.forEach((card, i) => {
-        if (!this.allInOneErrors[i]) {
-          this.allInOneErrors[i] = { heading: false, subHeading: false, paragraph: false, image: false };
-        }
+        this.ensureAllInOneError(i);
 
         this.allInOneErrors[i].heading = !card.heading?.trim();
         this.allInOneErrors[i].subHeading = !card.subHeading?.trim();
-        this.allInOneErrors[i].paragraph = !card.paragraph?.trim();
+        this.allInOneErrors[i].paragraph = !this.getPlainTextFromHtml(card.paragraph);
 
         // Hero style image validation
         if (!card.image && !card.imagePath) {
@@ -514,17 +682,17 @@ isValid =
 
       // Card 1
       this.whyErrors.heading1 = !this.whyHeading1?.trim();
-      this.whyErrors.paragraph1 = !this.whyParagraph1?.trim();
+      this.whyErrors.paragraph1 = !this.getPlainTextFromHtml(this.whyParagraph1);
       if (this.whyErrors.heading1 || this.whyErrors.paragraph1) isValid = false;
 
       // Card 2
       this.whyErrors.heading2 = !this.whyHeading2?.trim();
-      this.whyErrors.paragraph2 = !this.whyParagraph2?.trim();
+      this.whyErrors.paragraph2 = !this.getPlainTextFromHtml(this.whyParagraph2);
       if (this.whyErrors.heading2 || this.whyErrors.paragraph2) isValid = false;
 
       // Card 3
       this.whyErrors.heading3 = !this.whyHeading3?.trim();
-      this.whyErrors.paragraph3 = !this.whyParagraph3?.trim();
+      this.whyErrors.paragraph3 = !this.getPlainTextFromHtml(this.whyParagraph3);
       if (this.whyErrors.heading3 || this.whyErrors.paragraph3) isValid = false;
 
       return isValid;
@@ -535,11 +703,11 @@ isValid =
     if (!this.validateSection(this.activeSection)) {
       return; // Stop if validation fails
     }
-    this.activeSection = section;
+    this.goToSection(section);
   }
 
   prevSection(section: string) {
-    this.activeSection = section;
+    this.goToSection(section);
   }
   
   validateWhyChooseUs(): boolean {
@@ -547,17 +715,17 @@ isValid =
 
     // Card 1
     this.whyErrors.heading1 = !this.whyHeading1?.trim();
-    this.whyErrors.paragraph1 = !this.whyParagraph1?.trim();
+    this.whyErrors.paragraph1 = !this.getPlainTextFromHtml(this.whyParagraph1);
     if (this.whyErrors.heading1 || this.whyErrors.paragraph1) isValid = false;
 
     // Card 2
     this.whyErrors.heading2 = !this.whyHeading2?.trim();
-    this.whyErrors.paragraph2 = !this.whyParagraph2?.trim();
+    this.whyErrors.paragraph2 = !this.getPlainTextFromHtml(this.whyParagraph2);
     if (this.whyErrors.heading2 || this.whyErrors.paragraph2) isValid = false;
 
     // Card 3
     this.whyErrors.heading3 = !this.whyHeading3?.trim();
-    this.whyErrors.paragraph3 = !this.whyParagraph3?.trim();
+    this.whyErrors.paragraph3 = !this.getPlainTextFromHtml(this.whyParagraph3);
     if (this.whyErrors.heading3 || this.whyErrors.paragraph3) isValid = false;
 
     return isValid;
@@ -596,7 +764,11 @@ isValid =
           if (res.status && res.status.toLowerCase() === 'success') {
             // Success
             this.toastr.success('Landing Page Saved Successfully');
-            this.activeSection = 'faq';
+            this.shouldAddFaq = true;
+            this.gotEmptyFaq = true;
+            this.faqs = [{ question: '', answer: '' }];
+            this.syncFaqErrors();
+            this.goToSection('faq');
             // this.router.navigate(['/landing-page-list']);
           } else {
             // Any failure
@@ -615,10 +787,37 @@ isValid =
     }
   }
 handleSectionClick(section: string) {
-  if (this.mode === 'create') return; // block in create mode
+  if (this.isSectionDisabled(section)) return;
+
+  this.goToSection(section);
+  this.cd.detectChanges();
+}
+
+isSectionDisabled(section: string): boolean {
+  if (this.mode === 'edit') return false;
+
+  const sectionIndex = this.sectionOrder.indexOf(section);
+  return sectionIndex > this.unlockedSectionIndex;
+}
+
+private goToSection(section: string) {
+  const sectionIndex = this.sectionOrder.indexOf(section);
+  if (sectionIndex > this.unlockedSectionIndex) {
+    this.unlockedSectionIndex = sectionIndex;
+  }
+
   this.activeSection = section;
-   this.cd.detectChanges();
-  
+}
+
+getHeroImageUrl(): string {
+  const imagePath = this.heroData.imagePath;
+  if (!imagePath) return '';
+
+  if (imagePath.startsWith('blob:') || imagePath.startsWith('http')) {
+    return imagePath;
+  }
+
+  return `${this.baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
 }
   isImageUploaded = false;
   uploadHeroImage() {
@@ -654,6 +853,7 @@ handleSectionClick(section: string) {
 
     const file = input.files[0];
     const card = this.allInOneCards[index];
+    this.ensureAllInOneError(index);
 const allowedTypes = [
     'image/png',
     'image/jpeg',
@@ -682,7 +882,7 @@ const allowedTypes = [
     card.image = file;
 
     // Revoke previous blob URL if exists
-    if (card.imagePath && !card.isUploaded) {
+    if (card.imagePath.startsWith('blob:')) {
       URL.revokeObjectURL(card.imagePath);
     }
 
@@ -691,11 +891,19 @@ const allowedTypes = [
 
     // Reset uploaded flag and errors
     card.isUploaded = false;
-    if (!this.allInOneErrors[index]) {
-      this.allInOneErrors[index] = { heading: false, subHeading: false, paragraph: false, image: false };
-    }
     this.allInOneErrors[index].image = false;
     card.imageErrorMsg = '';
+  }
+
+  getAllInOneImageUrl(card: AllInOneCard): string {
+    const imagePath = card.imagePath;
+    if (!imagePath) return '';
+
+    if (imagePath.startsWith('blob:') || imagePath.startsWith('http')) {
+      return imagePath;
+    }
+
+    return `${this.baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
   }
 
   uploadAllInOneImage(index: number) {
@@ -728,10 +936,13 @@ const allowedTypes = [
   }
   
   
-saveFaq(mode: string) {
-  const validFaqs = this.faqs.filter(f => f.question && f.answer);
+saveFaq() {
+  if (!this.validateFaqs()) {
+    this.toastr.error('Please fill all FAQ fields');
+    return;
+  }
 
-  if (this.gotEmptyFaq) {
+  if (this.shouldAddFaq) {
     this.addFaqs();
     return;
   }
@@ -741,7 +952,7 @@ saveFaq(mode: string) {
 }
   addFaqs() {
    
-    const validFaqs = this.faqs.filter((f) => f.question && f.answer);
+    const validFaqs = this.faqs.filter((f) => f.question.trim() && this.getPlainTextFromHtml(f.answer));
 
     if (validFaqs.length === 0) {
       this.toastr.error('No valid FAQs to Save');
@@ -759,6 +970,7 @@ saveFaq(mode: string) {
     this.landingService.addFAQ(payload).subscribe({
       next: (res) => {
         this.gotEmptyFaq = false; // FAQs ab empty nahi hain
+        this.shouldAddFaq = false;
         this.toastr.success('FAQs saved successfully ✅');
          this.router.navigate(['/landing-page-list']);
       },
@@ -768,7 +980,7 @@ saveFaq(mode: string) {
   updateFaq() {
    
     // Filter out empty FAQs
-    const validFaqs = this.faqs.filter((f) => f.question && f.answer);
+    const validFaqs = this.faqs.filter((f) => f.question.trim() && this.getPlainTextFromHtml(f.answer));
 
     if (validFaqs.length === 0) {
       this.toastr.error('No valid FAQs to Update');

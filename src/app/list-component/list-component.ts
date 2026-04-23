@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { LandingService } from '../landing.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../environments/environment';
 
 interface PageCard {
   slug: string;
@@ -22,6 +23,7 @@ export class ListComponent implements OnInit {
  pageCards: PageCard[] = [];
   isLoading: boolean = false;
   errorMsg: string = '';
+  loadUrl = environment.loadUrl.replace(/\/api\/?$/, '');
 
   constructor(
     private router: Router,
@@ -52,6 +54,10 @@ isActiveRoute(route: string): boolean {
     this.router.navigate(['/create-landing-page', slug]);
   }
 
+  getPageUrl(slug: string): string {
+    return `${this.loadUrl}/${encodeURIComponent(slug)}`;
+  }
+
  
 
 
@@ -75,7 +81,7 @@ loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): vo
             const slugData = Array.isArray(item.slugListData) ? item.slugListData[0] : {};
             return {
               slug: item.slug || '',
-              title: slugData.heading || 'No Title',
+              title: item.title || 'No Title',
               description: slugData.description || 'No Description',
               preview_image: slugData.image
                 ? slugData.image.startsWith('http')
@@ -89,16 +95,15 @@ loadPageCards(page: number = 1, pageSize: number = 100, search: string = ''): vo
           this.errorMsg = 'No pages available';
         }
 
+        this.isLoading = false;
         this.cdr.detectChanges(); // force template update after async call
       },
       error: (err) => {
         console.error('Error loading page cards:', err);
         this.pageCards = [];
         this.errorMsg = 'Failed to load pages';
-        this.cdr.detectChanges();
-      },
-      complete: () => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }
