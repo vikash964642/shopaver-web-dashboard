@@ -747,19 +747,23 @@ isValid =
     if (this.mode === 'edit') {
       // UPDATE API
       this.landingService.updateLandingPage(this.slug!, payload).subscribe({
-        next: (res) => {
-        
+          
+     next: (res: any) => {
+        // ✅ Proper response check
+        if (res.status && res.status.toLowerCase() === 'success') {
           this.toastr.success('Landing Page Updated Successfully');
           this.cd.detectChanges();
-          // this.router.navigate(['/landing-page-list']);
-        },
-
-        error: (err) => {
-       
-          this.toastr.error('Failed to update page');
-        },
-      });
-    } 
+        } else {
+          // ❌ API failed but came in next
+          this.toastr.error(res.description || 'Failed to update page');
+        }
+      },
+      error: (err) => {
+        console.error('Update API Error:', err);
+        this.toastr.error('Failed to update page');
+      },
+    });
+  }
     else {
       this.landingService.addLandingPage(payload).subscribe({
         next: (res: any) => {
