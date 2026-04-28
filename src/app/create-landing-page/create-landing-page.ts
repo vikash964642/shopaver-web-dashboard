@@ -467,6 +467,8 @@ loadFaqBySlug(slug: string): void {
     this.clearAllInOneError(index, 'paragraph');
   }
 
+  
+  
   updateWhyParagraph(event: Event, cardNumber: 1 | 2 | 3) {
     const value = this.getEditorHtml(event);
 
@@ -507,6 +509,7 @@ loadFaqBySlug(slug: string): void {
     return isValid && !this.faqErrors.some((error) => error.question || error.answer);
   }
 
+  
   // ===============================
   // CREATE PAYLOAD
   // ===============================
@@ -705,6 +708,7 @@ isValid =
     }
     this.goToSection(section);
   }
+  
 
   prevSection(section: string) {
     this.goToSection(section);
